@@ -8,7 +8,7 @@ package com.mycompany.poo;
  *
  * @author carpi
  */
-public class POO {
+public class Main {
 
     public static void main(String[] args) {
         System.out.println("teste");
