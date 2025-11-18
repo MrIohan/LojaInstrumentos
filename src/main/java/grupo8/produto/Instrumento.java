@@ -4,7 +4,7 @@
  */
 package grupo8.produto;
 
-public final class Instrumento extends Produto {
+public class Instrumento extends Produto {
     
     private final int id;
     private String numSerie;
