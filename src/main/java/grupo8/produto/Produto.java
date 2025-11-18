@@ -9,7 +9,7 @@ import java.io.Serializable;
 public class Produto implements Serializable {
     public static final long serialVersionUID = 1L;
     private static int qntProduto = 0;
-    private static int proximoId = 1;
+    protected static int proximoId = 1;
     private static int estoqueMaximo = 1000; //statico sem ser contador...
 
     public static int getQntProduto() {
