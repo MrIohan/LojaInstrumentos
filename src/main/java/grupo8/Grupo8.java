@@ -3,11 +3,9 @@ package grupo8;
 //https://www.devmedia.com.br/conceitos-basicos-sobre-expressoes-regulares-em-java/27539
 
 import grupo8.papeis.Funcionario;
-import grupo8.pessoas.Pessoa;
 import grupo8.pessoas.PessoaFisica;
 import grupo8.pessoas.PessoaJuridica;
 import java.io.IOException;
-import java.util.List;
 
 public class Grupo8 {
 
@@ -48,5 +46,9 @@ public class Grupo8 {
 
         var func1 = new Funcionario(null, "2024273420014", "vendedor", "ativo", "22/02/2025", "CLT", "R$ 2.100,0");
         System.out.println(func1.getSalario());
+        
+       
+        
+        
     }
 }
