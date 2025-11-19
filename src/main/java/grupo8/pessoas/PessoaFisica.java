@@ -1,5 +1,6 @@
 package grupo8.pessoas;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -13,18 +14,16 @@ public final class PessoaFisica extends Pessoa {
     private String nome;
     private String cpf;
     private LocalDate dtNasc;
-    private int idade;
     
     public PessoaFisica(String nome, String cpf, String dtNasc, String endereco, String telefone1, String telefone2, String email) {
         super(endereco, telefone1, telefone2, email);
-        id = contador;
-        
         setNome(nome);
         setCPF(cpf);
         setDtNasc(dtNasc);
+        id = ++contador;
     }
-    
-    public int getID() {
+
+    public int getId() {
         return id;
     }
     
@@ -33,9 +32,10 @@ public final class PessoaFisica extends Pessoa {
     }
     
     public final void setNome(String nome) {
-        nome = (nome == null ? "" : nome.trim());
-        if(!nome.matches("[\\p{L} ]{5,}")) {
-            throw new IllegalArgumentException("Por favor, digite seu nome completo, sem abreviações.\n");
+        if (nome == null || nome.trim().isEmpty()) {
+            throw new IllegalArgumentException("Por favor, digite um nome!");
+        } else if(!nome.matches("[\\p{L} ]{5,}")) {
+            throw new IllegalArgumentException("Por favor, digite, ao menos, o nome e último sobrenome da pessoa.\n");
         }
         this.nome = nome;        
     }
@@ -55,7 +55,7 @@ public final class PessoaFisica extends Pessoa {
 
     public void setDtNasc(String dtNasc) {
         if (dtNasc == null || dtNasc.trim().isEmpty()) {
-            throw new IllegalArgumentException("A data de nascimento não pode ser vazia.");
+            throw new IllegalArgumentException("Por favor, digite a data de nascimento.");
         }
         
         LocalDate hoje = LocalDate.now();
@@ -64,7 +64,7 @@ public final class PessoaFisica extends Pessoa {
         try {
             dtConvertida = LocalDate.parse(dtNasc, formato);
         } catch(Exception e) {
-            throw new IllegalArgumentException("Data inválida. Use o formato DD/MM/AAAA.");
+            throw new IllegalArgumentException("Data inválida. Por favor, use o formato DD/MM/AAAA.");
         }        
         
         if(dtConvertida.isAfter(hoje)) {
@@ -72,19 +72,19 @@ public final class PessoaFisica extends Pessoa {
         }
         
         this.dtNasc = dtConvertida;
-        idade = Period.between(this.dtNasc, hoje).getYears();
     }
     
     public int getIdade() {
-        return idade;
+        LocalDate hoje = LocalDate.now();
+        return Period.between(dtNasc, hoje).getYears();
     }
     
     public void validaCPF(String cpf) {
         if(cpf == null || cpf.trim().isEmpty()) {
-            throw new IllegalArgumentException("Digite o CPF.");
-        } else {
-            cpf = cpf.trim();
-        }
+            throw new IllegalArgumentException("Por favor, digite o CPF.");
+        } 
+
+        cpf = cpf.trim();
         
         if(!cpf.matches("\\d{11}")) {
             throw new IllegalArgumentException("CPF inválido. Certifique-se de digitar somente os 11 números.");
@@ -96,11 +96,11 @@ public final class PessoaFisica extends Pessoa {
         
         String cpfTeste = cpf.substring(0,9);
         
-        int peso = 10;
         int soma = 0;
+        int peso = 10;
         for(int i = 0; i < 9; i++) {
-            int j = cpfTeste.charAt(i) - '0';
-            soma += peso * j;
+            int digito = cpfTeste.charAt(i) - '0';
+            soma += digito * peso;
             peso--;
         }
         
@@ -110,8 +110,8 @@ public final class PessoaFisica extends Pessoa {
         soma = 0;
         peso = 11;
         for(int i = 0; i < 10; i++) {
-            int j = cpfTeste.charAt(i) - '0';
-            soma += peso * j;
+            int digito = cpfTeste.charAt(i) - '0';
+            soma += digito * peso;
             peso--;
         }
         
@@ -119,27 +119,30 @@ public final class PessoaFisica extends Pessoa {
         cpfTeste += dig2;
         
         if(!cpf.equals(cpfTeste)) {
-            throw new IllegalArgumentException("Ops, esse CPF não existe. Por favor, verifique os números digitados.");
+            throw new IllegalArgumentException("CPF inválido. Por favor, verifique os números digitados.");
         }
     }
     
     @Override
     public String toString() {
         return 
-            "\nNome: " + nome +
-            "\nCPF: " + cpf +
-            "\nData de Nascimento: " + dtNasc.format(formato) +
-            "\nIdade: " + idade +
-            "\nEndereço: " + endereco +
-            "\nTelefone 1: " + telefone1 +
-            "\nTelefone 2: " + telefone2 +
-            "\nEmail: " + email +
+            "\n    Nome: " + nome +
+            "\n    CPF: " + cpf +
+            "\n    Data de Nascimento: " + dtNasc.format(formato) +
+            "\n    Idade: " + getIdade() +
+            "\n    Endereço: " + endereco +
+            "\n    Telefone 1: " + telefone1 +
+            "\n    Telefone 2: " + telefone2 +
+            "\n    Email: " + email +
             "\n\n---------------------------------------------------------------";
     }
     
-    
-    
     public void salvar() throws FileNotFoundException, IOException {
+        File pasta = new File("data");
+        if (!pasta.exists()) {
+            pasta.mkdir();
+        }
+        
         try (FileOutputStream fileOut = new FileOutputStream("src/data/Pessoa"+ id +"_PF.ser");
              ObjectOutputStream out = new ObjectOutputStream(fileOut)) {
              out.writeObject(this);

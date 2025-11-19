@@ -1,5 +1,6 @@
 package grupo8.pessoas;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -18,18 +19,17 @@ public final class PessoaJuridica extends Pessoa {
     private LocalDate dtAbertura;
     private String atividade;
     private PessoaFisica[] sociosPF;
+    private PessoaJuridica[] sociosPJ;
     
-    public PessoaJuridica(PessoaFisica[] sociosPF, String cnpj, String inscricao, String razao, String nome, String dtAbertura, String atividade, String endereco, String telefone1, String telefone2, String email) {
+    public PessoaJuridica(String cnpj, String inscricao, String razao, String nome, String dtAbertura, String atividade, String endereco, String telefone1, String telefone2, String email) {
         super(endereco, telefone1, telefone2, email);
-        id = contador;
-        
         setCnpj(cnpj);
         setInscricao(inscricao);
         setRazaoSocial(razao);
         setNomeFantasia(nome);
         setDtAbertura(dtAbertura);
         setAtividade(atividade);
-        setSociosPF(sociosPF);
+        id = ++contador;
     }
     
     public int getId() {
@@ -51,13 +51,12 @@ public final class PessoaJuridica extends Pessoa {
 
     public void setInscricao(String inscricao) {
         inscricao = (inscricao == null ? "" : inscricao.trim());
-        if(inscricao.isEmpty()) {
-            this.inscricao = "";
-        } else if(!inscricao.matches("\\d{8,14}")) {
+
+        if(!inscricao.isEmpty() && !inscricao.matches("\\d{8,14}")) {
             throw new IllegalArgumentException("Digite apenas os números da inscrição estadual OU deixe em branco");
-        } else {
-            this.inscricao = inscricao;
         }
+        
+        this.inscricao = inscricao;
     }
     
     public String getRazaoSocial() {
@@ -65,8 +64,11 @@ public final class PessoaJuridica extends Pessoa {
     }
 
     public void setRazaoSocial(String razao) {
-        razao = (razao == null ? "" : razao.trim());
-        if(!razao.matches("[\\p{L}\\w\\. ]{5,}")) {
+        if(razao == null || razao.trim().isEmpty()) {
+            throw new IllegalArgumentException("Por favor, digite a razão social (nome empresarial).");
+        } 
+        
+        if(!razao.matches("[\\p{L}\\d\\.& ]{5,}")) {
             throw new IllegalArgumentException("Por favor, digite a razão social completa.");
         }
         razaoSocial = razao;
@@ -78,11 +80,8 @@ public final class PessoaJuridica extends Pessoa {
 
     public void setNomeFantasia(String nome) {
         nome = (nome == null ? "" : nome.trim());
-        if (nome.isEmpty()) {
-            this.nomeFantasia = "";
-        } else {
-            this.nomeFantasia = nome;
-        }
+        
+        nomeFantasia = nome;
     }
 
     public LocalDate getDtAbertura() {
@@ -91,7 +90,7 @@ public final class PessoaJuridica extends Pessoa {
 
     public void setDtAbertura(String dtAbertura) {
         if(dtAbertura == null || dtAbertura.trim().isEmpty()) {
-            throw new IllegalArgumentException("A data de abertura não pode ser vazia");
+            throw new IllegalArgumentException("Por favor, digite a data de abertura da empresa.");
         }
         
         LocalDate hoje = LocalDate.now();
@@ -115,9 +114,11 @@ public final class PessoaJuridica extends Pessoa {
     }
     
     public void setAtividade(String atividade) {
-        atividade = (atividade == null ? "" : atividade.trim());
-        if(!atividade.matches("[\\p{L}\\w ]{5,}")) {
-            throw new IllegalArgumentException("Por favor, digite, pelo menos, a atividade principal.");
+        if(atividade == null || atividade.trim().isEmpty()){
+            throw new IllegalArgumentException("Por favor, digite, pelo menos, a atividade principal da empresa.");
+        }
+        if(!atividade.matches("[\\p{L} ]{5,}")) {
+            throw new IllegalArgumentException("É esperado somente letras no campo Atividade, com, no mínimo, 5 caracteres.");
         }
         this.atividade = atividade;
     }
@@ -127,14 +128,29 @@ public final class PessoaJuridica extends Pessoa {
     }
 
     public void setSociosPF(PessoaFisica[] sociosPF) {
+        if(sociosPF == null || sociosPF.length == 0) {
+            throw new IllegalArgumentException("Ao menos um sócio deve ser associado ao cadastro da empresa!");
+        }
         this.sociosPF = sociosPF;
     }
     
-    public void validaCnpj(String cnpj) {
-        cnpj = (cnpj == null ? "" : cnpj.trim());
-        if(cnpj.isEmpty()) {
-            throw new IllegalArgumentException("Digite um CNPJ.");
+    public PessoaJuridica[] getSociosPJ() {
+        return sociosPJ;
+    }
+    
+    public void setSociosPJ(PessoaJuridica[] sociosPJ) {
+        if(sociosPJ == null || sociosPJ.length == 0) {
+            throw new IllegalArgumentException("Ao menos um sócio deve ser associado ao cadastro da empresa!");
         }
+        this.sociosPJ = sociosPJ;
+    }
+    
+    public void validaCnpj(String cnpj) {
+        if(cnpj == null || cnpj.trim().isEmpty()) {
+            throw new IllegalArgumentException("Por favor, digite um CNPJ.");
+        }
+        
+        cnpj = cnpj.trim();
         
         if(!cnpj.matches("\\d{14}")) {
             throw new IllegalArgumentException("CNPJ inválido. Por favor, digite somente os 14 números!");
@@ -156,8 +172,8 @@ public final class PessoaJuridica extends Pessoa {
         
         int soma = 0;
         for(int i = 0; i < 12; i++) {
-            int j = cnpjTeste.charAt(i) - '0';
-            soma += j * teste.get(i);
+            int digito = cnpjTeste.charAt(i) - '0';
+            soma += teste.get(i) * digito;
         }
         
         int dig1 = (soma % 11 < 2 ? 0 : 11 - soma % 11);
@@ -166,8 +182,8 @@ public final class PessoaJuridica extends Pessoa {
         teste.add(0, 6);
         soma = 0;
         for(int i = 0; i < 13; i++) {
-            int j = cnpjTeste.charAt(i) - '0';
-            soma += j * teste.get(i);
+            int digito = cnpjTeste.charAt(i) - '0';
+            soma += teste.get(i) * digito;
         }
         
         int dig2 = (soma % 11 < 2 ? 0 : 11 - soma % 11);
@@ -181,41 +197,81 @@ public final class PessoaJuridica extends Pessoa {
     @Override
     public String toString() {
         return
-        "\nCNPJ: " + cnpj +
-        "\nInscrição Estadual: " + inscricao +
+        "\nDADOS PJ (ID: " + id + ")\n" +
         "\nRazão Social: " + razaoSocial +
         "\nNome Fantasia: " +
+        "\nCNPJ: " + cnpj +
+        "\nInscrição Estadual: " + inscricao +
         "\nEndereço: " + endereco +
         "\nTelefone 1: " + telefone1 +
         "\nTelefone 2: " + telefone2 +
         "\nEmail: " + email +
         "\nData de Abertura: " + dtAbertura.format(formato) +
-        "\nAtividade: " + atividade;
+        "\nAtividade: " + atividade + "\n";
     }
 
-    public String dadosPJ() {
-        StringBuilder sb = new StringBuilder(toString());
+    public String qsa() {
+        var sb = new StringBuilder();
         
-        if (sociosPF == null || sociosPF.length == 0) {
-            sb.append("\n\nQUADRO SOCIETÁRIO: Nenhum sócio cadastrado.\n");
+        if ((sociosPF == null || sociosPF.length == 0) && (sociosPJ == null || sociosPJ.length == 0)) {
+            sb.append("\nQUADRO SOCIETÁRIO: Nenhum sócio cadastrado.\n");
             return sb.toString();
         }
         
-        sb.append("\n\nQUADRO SOCIETÁRIO (Total: ")
-          .append(sociosPF.length)
-          .append(" sócios)\n");
+        sb.append("\nQUADRO SOCIETÁRIO:\n");
         
         int i = 0;
-        for(PessoaFisica socio : sociosPF) {
-            i++;
-            sb.append("\nSócio ").append(i).append("\n");
-            sb.append(socio.toString()).append("\n");            
+        if(sociosPF != null && sociosPF.length > 0) {
+            for(PessoaFisica socio : sociosPF) {
+                i++;
+                sb.append("\nSÓCIO ").append(i).append(" - PF (ID: ").append(socio.getId()).append(")\n");
+                sb.append(socio.toString()).append("\n");            
+            }
         }
         
+        if(sociosPJ != null && sociosPJ.length > 0) {
+            for(PessoaJuridica socio : sociosPJ) {
+                i++;
+                sb.append("\nSÓCIO ").append(i).append(" - PJ (ID: ").append(socio.getId()).append(")\n\n");
+                sb.append("    Razão Social: ").append(socio.getRazaoSocial()).append("\n");
+                sb.append("    Nome Fantasia: ").append(socio.getNomeFantasia()).append("\n");
+                sb.append("    CNPJ: ").append(socio.getCnpj()).append("\n");
+                sb.append("    Telefone: ").append(socio.getTelefone1()).append("\n");
+                sb.append("    Email: ").append(socio.getEmail()).append("\n\n");
+                sb.append("    Representante(s): ").append("\n");
+                
+                if(socio.getSociosPF() != null && socio.getSociosPF().length > 0) {
+                    int j = 0;
+                    for(PessoaFisica socioPF : socio.getSociosPF()) {
+                        j++;
+                        sb.append("\n    ").append("Sócio ").append(j).append(" - PF (ID: ").append(socioPF.getId()).append(")\n\n");
+                        sb.append("         Nome: ").append(socioPF.getNome()).append("\n");
+                        sb.append("         CPF: ").append(socioPF.getCPF()).append("\n");
+                        sb.append("         Telefone: ").append(socioPF.getTelefone1()).append("\n");
+                        sb.append("         Email: ").append(socioPF.getEmail()).append("\n");
+                    }
+                } else {
+                    sb.append("\n    ATENÇÃO: Não há sócios vinculados a esta empresa.\n");
+                }
+                
+                sb.append("\n---------------------------------------------------------------");
+            }
+        }
         return sb.toString();
     }
     
+    public String exibirDados() {
+        var sc = new StringBuilder(this.toString());
+        sc.append(this.qsa());
+        return sc.toString();
+    }
+    
     public void salvar() throws FileNotFoundException, IOException {
+        File pasta = new File("data");
+        if (!pasta.exists()) {
+            pasta.mkdir();
+        }
+        
         try (FileOutputStream fileOut = new FileOutputStream("src/data/Pessoa"+ id +"_PJ.ser");
              ObjectOutputStream out = new ObjectOutputStream(fileOut)) {
              out.writeObject(this);
