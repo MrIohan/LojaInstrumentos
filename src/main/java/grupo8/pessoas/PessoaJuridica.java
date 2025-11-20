@@ -198,16 +198,16 @@ public final class PessoaJuridica extends Pessoa {
     public String toString() {
         return
         "\nDADOS PJ (ID: " + id + ")\n" +
-        "\nRazão Social: " + razaoSocial +
-        "\nNome Fantasia: " +
-        "\nCNPJ: " + cnpj +
-        "\nInscrição Estadual: " + inscricao +
-        "\nEndereço: " + endereco +
-        "\nTelefone 1: " + telefone1 +
-        "\nTelefone 2: " + telefone2 +
-        "\nEmail: " + email +
-        "\nData de Abertura: " + dtAbertura.format(formato) +
-        "\nAtividade: " + atividade + "\n";
+        "\n    Razão Social: " + razaoSocial +
+        "\n    Nome Fantasia: " +
+        "\n    CNPJ: " + cnpj +
+        "\n    Inscrição Estadual: " + inscricao +
+        "\n    Data de Abertura: " + dtAbertura.format(formato) +
+        "\n    Atividade: " + atividade +
+        "\n    Endereço: " + endereco +
+        "\n    Telefone 1: " + telefone1 +
+        "\n    Telefone 2: " + telefone2 +
+        "\n    Email: " + email;
     }
 
     public String qsa() {
@@ -224,7 +224,7 @@ public final class PessoaJuridica extends Pessoa {
         if(sociosPF != null && sociosPF.length > 0) {
             for(PessoaFisica socio : sociosPF) {
                 i++;
-                sb.append("\nSÓCIO ").append(i).append(" - PF (ID: ").append(socio.getId()).append(")\n");
+                sb.append("\nSÓCIO ").append(i).append("\n");
                 sb.append(socio.toString()).append("\n");            
             }
         }
@@ -232,13 +232,15 @@ public final class PessoaJuridica extends Pessoa {
         if(sociosPJ != null && sociosPJ.length > 0) {
             for(PessoaJuridica socio : sociosPJ) {
                 i++;
-                sb.append("\nSÓCIO ").append(i).append(" - PJ (ID: ").append(socio.getId()).append(")\n\n");
-                sb.append("    Razão Social: ").append(socio.getRazaoSocial()).append("\n");
-                sb.append("    Nome Fantasia: ").append(socio.getNomeFantasia()).append("\n");
-                sb.append("    CNPJ: ").append(socio.getCnpj()).append("\n");
-                sb.append("    Telefone: ").append(socio.getTelefone1()).append("\n");
-                sb.append("    Email: ").append(socio.getEmail()).append("\n\n");
-                sb.append("    Representante(s): ").append("\n");
+                sb.append("\nSÓCIO ").append(i).append("\n")
+                  .append(toString()).append("\n");
+                
+//                sb.append("    Razão Social: ").append(socio.getRazaoSocial()).append("\n");
+//                sb.append("    Nome Fantasia: ").append(socio.getNomeFantasia()).append("\n");
+//                sb.append("    CNPJ: ").append(socio.getCnpj()).append("\n");
+//                sb.append("    Telefone: ").append(socio.getTelefone1()).append("\n");
+//                sb.append("    Email: ").append(socio.getEmail()).append("\n\n");
+//                sb.append("    Representante(s): ").append("\n");
                 
                 if(socio.getSociosPF() != null && socio.getSociosPF().length > 0) {
                     int j = 0;
@@ -261,9 +263,9 @@ public final class PessoaJuridica extends Pessoa {
     }
     
     public String exibirDados() {
-        var sc = new StringBuilder(this.toString());
-        sc.append(this.qsa());
-        return sc.toString();
+        var sb = new StringBuilder(this.toString()).append("\n");
+        sb.append(this.qsa());
+        return sb.toString();
     }
     
     public void salvar() throws FileNotFoundException, IOException {

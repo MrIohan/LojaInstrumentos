@@ -87,7 +87,7 @@ public final class PessoaFisica extends Pessoa {
         cpf = cpf.trim();
         
         if(!cpf.matches("\\d{11}")) {
-            throw new IllegalArgumentException("CPF inválido. Certifique-se de digitar somente os 11 números.");
+            throw new IllegalArgumentException("CPF inválido. Por favor, certifique-se de digitar somente os 11 números.");
         }
         
         if(cpf.matches("(\\d)\\1{10}")) {
@@ -126,6 +126,7 @@ public final class PessoaFisica extends Pessoa {
     @Override
     public String toString() {
         return 
+            "\nDADOS PF (ID: " + id + ")\n" +
             "\n    Nome: " + nome +
             "\n    CPF: " + cpf +
             "\n    Data de Nascimento: " + dtNasc.format(formato) +
@@ -133,8 +134,7 @@ public final class PessoaFisica extends Pessoa {
             "\n    Endereço: " + endereco +
             "\n    Telefone 1: " + telefone1 +
             "\n    Telefone 2: " + telefone2 +
-            "\n    Email: " + email +
-            "\n\n---------------------------------------------------------------";
+            "\n    Email: " + email;
     }
     
     public void salvar() throws FileNotFoundException, IOException {

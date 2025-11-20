@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.regex.Pattern;
 
 public abstract class Pessoa implements Serializable {
@@ -76,6 +77,39 @@ public abstract class Pessoa implements Serializable {
         } else {
             this.email = email.trim();
         }
+    }
+    
+    public static String geraCpf() {
+        var random = new Random();
+        String cpf = "";
+        
+        for(int i = 0; i < 9; i++) {
+            cpf += random.nextInt(10);
+        }
+        
+        int soma = 0;
+        int peso = 10;
+        for(int i = 0; i < 9; i++) {
+            int digito = cpf.charAt(i) - '0';
+            soma += digito * peso;
+            peso--;
+        }
+        
+        int dig1 = (soma % 11 < 2 ? 0 : 11 - soma % 11 );
+        cpf += dig1;
+        
+        soma = 0;
+        peso = 11;
+        for(int i = 0; i < 10; i++) {
+            int digito = cpf.charAt(i) - '0';
+            soma += digito * peso;
+            peso--;
+        }
+        
+        int dig2 = (soma % 11 < 2 ? 0 : 11 - soma % 11 );
+        cpf += dig2;
+        
+        return cpf;
     }
     
     public void validaTelefone(String telefone) {

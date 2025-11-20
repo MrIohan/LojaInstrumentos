@@ -22,27 +22,33 @@ public final class Funcionario implements Serializable {
     
     private static final DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     public static final long serialVersionUID = 1L;
-    private static int id = 0;
+    private static int contador = 0;
     
+    private final int matricula; 
     private Pessoa dadosPessoa;
-    private String matricula;
+    private String pis;
     private String cargo; //gerente, vendedor, caixa
     private String status; //ativo, desligado, afastado
     private LocalDate dtAdmissao;
     private LocalDate dtDemissao; //não obrigatório
-    private int tempoServico;
     private String tipoContrato; //CLT ou PJ
     private double salario;
+    private String emailCorporativo;
     
-    public Funcionario(Pessoa dadosPessoa, String matricula , String cargo, String status, String dtAdmissao, String tipoContrato, String salario) {
-        id++;
+    public Funcionario(Pessoa dadosPessoa, String pis, String cargo, String dtAdmissao, String tipoContrato, String salario) {
         setDadosPessoa(dadosPessoa);
-        setMatricula(matricula);
+        setPis(pis);
         setCargo(cargo);
-        setStatus(status);
         setDtAdmissao(dtAdmissao);
         setTipoContrato(tipoContrato);
         setSalario(salario);
+        status = "Ativo";
+        contador++;
+        matricula = contador;
+    }    
+    
+    public int getMatricula() {
+        return matricula;
     }
 
     public Pessoa getDadosPessoa() {
@@ -51,21 +57,18 @@ public final class Funcionario implements Serializable {
 
     public void setDadosPessoa(Pessoa dadosPessoa) {
         if(dadosPessoa == null) {
-            throw new IllegalArgumentException("Você deve fazer o cadastro da pessoa primeiro!");
+            throw new IllegalArgumentException("Pessoa não cadastrada.");
         }
         this.dadosPessoa = dadosPessoa;
     }
     
-    public String getMatricula() {
-        return matricula;
+    public String getPis() {
+        return pis;
     }
     
-    public void setMatricula(String matricula) {
-        matricula = (matricula == null ? "" : matricula.trim());
-        if(matricula.isEmpty()) {
-            throw new IllegalArgumentException("Por favor, digite a matrícula do(a) funcionário(a).");
-        }
-        this.matricula = matricula;
+    public void setPis(String pis) {
+        validaPis(pis);
+        this.pis = pis;
     }
     
     public String getCargo() {
@@ -73,7 +76,10 @@ public final class Funcionario implements Serializable {
     }
 
     public void setCargo(String cargo) {
-        cargo = (cargo == null ? "" : cargo.trim());
+        if(cargo == null || cargo.trim().isEmpty()){
+            throw new IllegalArgumentException("Por favor, digite o cargo do funcionário.");
+        }
+        
         if(!cargo.matches("(?i)Gerente|(?i)Vendedor|(?i)Caixa")) {
             throw new IllegalArgumentException("Por favor, digite um cargo existente: Gerente, Vendedor ou Caixa.");
         }
@@ -86,7 +92,10 @@ public final class Funcionario implements Serializable {
     }
 
     public void setStatus(String status) {
-        status = (status == null ? "" : status.trim());
+        if(status == null || status.trim().isEmpty()) {
+            throw new IllegalArgumentException("Por favor, digite o status do funcionário (Ativo, Desligado ou Afastado).");
+        }
+        
         if(!status.matches("(?i)Ativo|(?i)Desligado|(?i)Afastado")) {
             throw new IllegalArgumentException("Status válidos: Ativo, Desligado e Afastado");
         }
@@ -103,11 +112,19 @@ public final class Funcionario implements Serializable {
             throw new IllegalArgumentException("A data de admissão não pode ser vazia.");
         }
         
+        LocalDate hoje = LocalDate.now();
+        LocalDate temp;
         try {
-            this.dtAdmissao = LocalDate.parse(data, formato);
+            temp = LocalDate.parse(data, formato);
         } catch(Exception e) {
             throw new IllegalArgumentException("Data inválida. Use o formato DD/MM/AAAA.");
-        }   
+        }
+        
+        if(temp.isAfter(hoje)) {
+            throw new IllegalArgumentException("A data de admissão não pode ser anterior à data atual.");
+        }
+        
+        dtAdmissao = temp;
     }
     
     public LocalDate getDtDemissao() {
@@ -115,37 +132,35 @@ public final class Funcionario implements Serializable {
     }
 
     public void setDtDemissao(String data) {
-        LocalDate hoje = LocalDate.now();
-        
         if (data == null || data.trim().isEmpty()) {
             this.dtDemissao = null;
             return;
         }
         
+        LocalDate temp;
         try {
-            LocalDate temp = LocalDate.parse(data, formato);
-            
-            if(temp.isBefore(dtAdmissao)) {
-                throw new IllegalArgumentException("A data de demissão não pode ser inferior à de admissão.");
-            }
-            this.dtDemissao = temp;
+            temp = LocalDate.parse(data, formato);
         } catch(Exception e) {
             throw new IllegalArgumentException("Data inválida. Use o formato DD/MM/AAAA.");
         }
         
-        if(dtDemissao.isBefore(hoje)) {
-            status = "Desligado";
-            tempoServico = Period.between(dtAdmissao, dtDemissao).getMonths();
-        } else {
-            tempoServico = Period.between(dtAdmissao, hoje).getMonths(); //mudar!
+        if(temp.isBefore(dtAdmissao)) {
+            throw new IllegalArgumentException("A data de demissão não pode ser inferior à de admissão.");
         }
+        
+        dtDemissao = temp;
     }
 
-    public int getTempoServico() {
+    public String getTempoServico() {
+        String tempoServico = "O tempo de serviço deste funcionário é: ";
         if(dtDemissao == null) {
-            tempoServico = Period.between(dtAdmissao, LocalDate.now()).getMonths();
+            tempoServico += Period.between(dtAdmissao, LocalDate.now()).getYears() + " ano(s), " +
+                Period.between(dtAdmissao, LocalDate.now()).getMonths() + " mês(es) e " + 
+                Period.between(dtAdmissao, LocalDate.now()).getDays() + " dia(s).";
         } else {
-            tempoServico = Period.between(dtAdmissao, dtDemissao).getMonths();
+            tempoServico += Period.between(dtAdmissao, dtDemissao).getYears() + " ano(s), " +
+                Period.between(dtAdmissao, dtDemissao).getMonths() + " mês(es) e " + 
+                Period.between(dtAdmissao, dtDemissao).getDays() + " dia(s).";
         }
         return tempoServico;
     }
@@ -155,11 +170,13 @@ public final class Funcionario implements Serializable {
     }
 
     public void setTipoContrato(String tipoContrato) {
-        tipoContrato = (tipoContrato == null ? "" : tipoContrato.trim());
-        if(!tipoContrato.matches("CLT|PJ")) {
+        if(tipoContrato == null || tipoContrato.trim().isEmpty()) {
+            throw new IllegalArgumentException("Por favor, digite o tipo do contrato de trabalho.");
+        }
+        if(!tipoContrato.matches("(?i)CLT|(?i)PJ")) {
             throw new IllegalArgumentException("Por favor, digite CLT ou PJ.");
         } 
-        this.tipoContrato = tipoContrato;
+        this.tipoContrato = tipoContrato.toUpperCase();
     }
 
     public double getSalario() {
@@ -168,7 +185,7 @@ public final class Funcionario implements Serializable {
 
     public void setSalario(String salario) {
         if(salario == null || salario.trim().isEmpty()) {
-            throw new IllegalArgumentException("O salário não pode ser vazio!");
+            throw new IllegalArgumentException("Por favor, digite o salário do funcionário.");
         }
 
         salario = salario.trim().replaceAll("[^0-9,.]", "").replaceAll("^0+", "");
@@ -177,28 +194,20 @@ public final class Funcionario implements Serializable {
             throw new IllegalArgumentException("Nenhum valor numérico encontrado");
         }
         
-        if(salario.contains(",")) {
-            int i = salario.length() - salario.indexOf(",");
-            while(salario.contains(",") && salario.length() - salario.indexOf(",") > 3) {
-                int limite = salario.indexOf(",") + 1;
-                String salario1 = salario.substring(0, limite);
-                String salario2 = salario.substring(limite);
-                salario1 = salario1.replace(",", "");
-                salario = salario1 + salario2;
-                i = salario.length() - salario.indexOf(",");
-            }
+        while(salario.contains(",") && salario.length() - salario.indexOf(",") > 3) {
+            int limite = salario.indexOf(",") + 1;
+            String salario1 = salario.substring(0, limite);
+            String salario2 = salario.substring(limite);
+            salario1 = salario1.replace(",", "");
+            salario = salario1 + salario2;
         }
         
-        if(salario.contains(".")) {
-            int i = salario.length() - salario.indexOf(".");
-            while(salario.contains(".") && i > 3) {
-                int limite = salario.indexOf(".") + 1;
-                String salario1 = salario.substring(0, limite);
-                String salario2 = salario.substring(limite);
-                salario1 = salario1.replace(".", "");
-                salario = salario1 + salario2;
-                i = salario.length() - salario.indexOf(".");
-            }
+        while(salario.contains(".") && salario.length() - salario.indexOf(".") > 3) {
+            int limite = salario.indexOf(".") + 1;
+            String salario1 = salario.substring(0, limite);
+            String salario2 = salario.substring(limite);
+            salario1 = salario1.replace(".", "");
+            salario = salario1 + salario2;
         }
         
         salario = salario.replace(",", ".");
@@ -206,18 +215,53 @@ public final class Funcionario implements Serializable {
         try {
             double salarioFormatado = Double.parseDouble(salario);
             
-            if(salarioFormatado < 1518) {
-                throw new IllegalArgumentException("O salário não pode ser inferior ao mínimo previsto!");
+            if(salarioFormatado <= 0) {
+                throw new IllegalArgumentException("Por favor, digite um salário maior que 0.");
             } else {
                 this.salario = salarioFormatado;
             }
         } catch(Exception e) {
-            throw new IllegalArgumentException("Digite somente os números do salário, usando ponto como separador decimal.");
+            throw new IllegalArgumentException("Por favot, digite somente os números do salário, usando ponto como separador decimal.");
+        }
+    }
+
+    public String getEmailCorporativo() {
+        return emailCorporativo;
+    }
+
+    public void setEmailCorporativo(String emailCorporativo) {
+        this.emailCorporativo = emailCorporativo;
+    }
+    
+    public void validaPis(String pis) {
+        if(pis == null || pis.trim().isEmpty()) {
+            throw new IllegalArgumentException("Por favor, digite o PIS do funcionário.");
+        } 
+
+        pis = pis.trim();
+        
+        if(!pis.matches("\\d{11}")) {
+            throw new IllegalArgumentException("PIS inválido. Por favor, certifique-se de digitar somente os 11 números.");
+        }
+        
+        String pisTeste = pis.substring(0,10);
+        
+        int[] peso = {3, 2, 9, 8, 7, 6, 5, 4, 3, 2};
+        int soma = 0;
+        for(int i = 0; i < peso.length; i++) {
+            int digito = pisTeste.charAt(i) - '0';
+            soma += digito * peso[i];
+        }
+        
+        pisTeste += (11 - soma % 11);
+        
+        if(!pis.equals(pisTeste)) {
+            throw new IllegalArgumentException("PIS inválido. Por favor, verifique os números digitados.");
         }
     }
     
     public void salvar() throws FileNotFoundException, IOException {
-        try (FileOutputStream fileOut = new FileOutputStream("src/data/Funcionario"+ id +".ser");
+        try (FileOutputStream fileOut = new FileOutputStream("src/data/Funcionario"+ contador +".ser");
              ObjectOutputStream out = new ObjectOutputStream(fileOut)) {
              out.writeObject(this);
         }
@@ -225,21 +269,34 @@ public final class Funcionario implements Serializable {
     
     @Override
     public String toString() {
-        
         var sb = new StringBuilder();
+        
+        sb.append("\nDADOS FUNCIONÁRIO\n")
+          .append("\nMatrícula: ").append(matricula);
         
         switch(dadosPessoa) {
             case PessoaFisica pf -> {
-                sb.append("Nome: ").append(pf.getNome())
-                  .append("CPF: ").append(pf.getCPF())
-                  .append("Telefone: ").append(pf.getTelefone1())
-                  .append("Email: ").append(pf.getEmail());
+                sb.append("\nNome: ").append(pf.getNome())
+                  .append("\nData de Nascimento: ").append(pf.getDtNasc().format(formato))
+                  .append(" (Idade: ").append(pf.getIdade()).append(" anos)")
+                  .append("\nTelefone: ").append(pf.getTelefone1())
+                  .append("\nEmail: ").append((emailCorporativo == null ? pf.getEmail() : emailCorporativo))
+                  .append("\n");
             }
             case PessoaJuridica pj -> {
                 
             }
             default -> {}
         }
+        
+        sb.append("\nPIS: ").append(pis)
+          .append("\nCargo: ").append(cargo)
+          .append("\nStatus: ").append(status)
+          .append("\nData de Admissão: ").append(dtAdmissao.format(formato))
+          .append("\nData de Demissão: ").append((dtDemissao == null ? "" : dtDemissao.format(formato)))
+          .append("\nTipo de Contrato: ").append(tipoContrato)
+          .append("\nSalário: R$").append(salario);
+                
         return sb.toString();
     }
     

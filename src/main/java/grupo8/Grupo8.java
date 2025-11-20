@@ -16,22 +16,12 @@ public class Grupo8 {
         
         var sc = new Scanner(System.in);
         
-        while(true) {
-            try {
-                System.out.print("Digite seu CPF: ");
-                String cpf = sc.nextLine();
-                var pf1 = new PessoaFisica("Phellyppe Gomes", cpf, "22/02/1999", "Rua Rio Xingu, nº 16, Grande Terceiro, Cuiabá/MT", "65996816470", null , "phellyppe.matos@estudante.ifmt.edu.br");
-                break;
-            } catch(Exception e) {
-                System.out.println("\n" + e.getMessage() + "\n");
-            }
-        }
-       
-        var pf2 = new PessoaFisica("Pedro Escobar", "48198072187", "12/03/1989", "Rua das Desgraças, 0, Inferno, Cracolândia/SP", "11930007000", null, "pedro157@vemprocrime.com.br");
-        var pf3 = new PessoaFisica("Jacinto Leite", "48198072187", "05/09/2004", "Rua Passivas Reinam, 24, Quero-Quero Pica-pau, Ratanabá", "69969696969", "", "mcleitinho@filhosdocatra.com.br");
+        var pf1 = new PessoaFisica("Phellyppe Gomes", Pessoa.geraCpf(), "22/02/1999", "Rua Rio Xingu, nº 16, Grande Terceiro, Cuiabá/MT", "65996816470", null , "phellyppe.matos@estudante.ifmt.edu.br");
+        var pf2 = new PessoaFisica("Pedro Escobar", Pessoa.geraCpf(), "12/03/1989", "Rua das Desgraças, 0, Inferno, Cracolândia/SP", "11930007000", null, "pedro157@vemprocrime.com.br");
+        var pf3 = new PessoaFisica("Jacinto Leite", Pessoa.geraCpf(), "05/09/2004", "Rua Passivas Reinam, 24, Quero-Quero Pica-pau, Ratanabá", "69969696969", "", "mcleitinho@filhosdocatra.com.br");
         
-        PessoaFisica[] sociosPF1 = {pf2};
-        PessoaFisica[] sociosPF2 = {pf2, pf3};
+        PessoaFisica[] sociosPF1 = {pf1};
+        PessoaFisica[] sociosPF2 = {pf2, pf1, pf3};
         
         var pj1 = new PessoaJuridica("33711029000130", "", "Condominio GSC", null, "01/01/2009", "Gestão imobiliária", "Rua Desconhecida, 0, Duque de Caxias, Cuiabá/MT", "65933152100", null, "gsc@mechupa.com");
         pj1.setSociosPF(sociosPF1);
@@ -41,13 +31,14 @@ public class Grupo8 {
         
         PessoaJuridica[] socioPJ1 = {pj2};
         pj1.setSociosPJ(socioPJ1);
-        
+
+        System.out.println(pf1.toString());
         System.out.println(pj1.exibirDados());
-        
         System.out.println(pj2.exibirDados());
         
-//        var func1 = new Funcionario(null, "2024273420014", "vendedor", "ativo", "22/02/2025", "CLT", "R$ 2.100,0");
-//        
+        var func1 = new Funcionario(pf1, "20423575737", "Vendedor", "15/10/2025", "CLT", "2700");
+        System.out.println(func1.toString());
+        
 //        List<Pessoa> lista = Pessoa.carregar();
 //
 //        for(int i = 0; i < lista.size(); i++) {
