@@ -255,8 +255,6 @@ public final class PessoaJuridica extends Pessoa {
                 } else {
                     sb.append("\n    ATENÇÃO: Não há sócios vinculados a esta empresa.\n");
                 }
-                
-                sb.append("\n---------------------------------------------------------------");
             }
         }
         return sb.toString();

@@ -22,7 +22,7 @@ public final class Funcionario implements Serializable {
     
     private static final DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     public static final long serialVersionUID = 1L;
-    private static int contador = 0;
+    public static int contador = 0;
     
     private final int matricula; 
     private Pessoa dadosPessoa;
@@ -43,8 +43,7 @@ public final class Funcionario implements Serializable {
         setTipoContrato(tipoContrato);
         setSalario(salario);
         status = "Ativo";
-        contador++;
-        matricula = contador;
+        matricula = ++contador;
     }    
     
     public int getMatricula() {
