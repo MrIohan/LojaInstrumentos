@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package grupo8.view;
+
 import grupo8.persistencia.GerenciadorDados;
 import java.util.ArrayList;
 import grupo8.produto.Produto;
@@ -18,35 +19,52 @@ public class JFrameGestaoProdutos extends javax.swing.JFrame {
      */
     GerenciadorDados gerenciador = new GerenciadorDados();
     ArrayList<Produto> listaProdutos = new ArrayList<>();
-    
+
     public JFrameGestaoProdutos() {
         initComponents();
         atualizarTabela();
     }
-    
+
     private void atualizarTabela() {
         // 1. Busca do arquivo
         listaProdutos = gerenciador.carregarLista();
-        
+
         // 2. Limpa a tabela visual
-        javax.swing.table.DefaultTableModel modelo = (javax.swing.table.DefaultTableModel) jTable1.getModel();
+        javax.swing.table.DefaultTableModel modelo = (javax.swing.table.DefaultTableModel) TabelaProdutos.getModel();
         modelo.setRowCount(0);
-        
+
         // 3. Preenche com os dados (Polimorfismo ajuda aqui!)
         for (Produto p : listaProdutos) {
+
+            // --- TRATAMENTO DO FABRICANTE ---
+            String fabricanteTexto = ""; // Começa vazio por padrão
+
+            // Pergunta: "Você é um Instrumento?"
+            if (p instanceof grupo8.produto.Instrumento) {
+                // Sim! Então converte (cast) e pega o fabricante
+                grupo8.produto.Instrumento inst = (grupo8.produto.Instrumento) p;
+                fabricanteTexto = inst.getFabricante();
+            } // Pergunta: "Ou será que você é um Acessório?"
+            else if (p instanceof grupo8.produto.Acessorio) {
+                grupo8.produto.Acessorio acess = (grupo8.produto.Acessorio) p;
+                //fabricanteTexto = acess.getFabricante();
+            }
+
             modelo.addRow(new Object[]{
                 // Assumindo que você tem getters na classe Produto
                 p.getIdProduto(),
-                p.getMarca(), 
+                p.getCodigo(),
+                p.getDescricao(),
+                fabricanteTexto,
+                p.getMarca(),
                 p.getDataFabricacao(),
+                p.getPaisFabricacao(),
                 p.getMaterial(),
                 p.getCor(),
                 p.getPreco(),
                 p.getPeso(),
-                p.getQntEstoque(),
-                p.getPrazoGarantia(),
-                p.getDescricaoEspecifica()
-                // ... outros campos
+                p.getQntEstoque()
+            // ... outros campos
             });
         }
     }
@@ -66,7 +84,7 @@ public class JFrameGestaoProdutos extends javax.swing.JFrame {
         Editar = new javax.swing.JButton();
         Excluir = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        TabelaProdutos = new javax.swing.JTable();
 
         jMenuItem1.setText("jMenuItem1");
 
@@ -111,7 +129,7 @@ public class JFrameGestaoProdutos extends javax.swing.JFrame {
                     .addComponent(Excluir)))
         );
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        TabelaProdutos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null, null, null, null, null, null, null},
                 {null, null, null, null, null, null, null, null, null, null, null, null},
@@ -122,7 +140,7 @@ public class JFrameGestaoProdutos extends javax.swing.JFrame {
                 "ID", "Código", "Descrição", "Fabricante", "Marca", "Data Fabricação", "País Fabricação", "Material", "Cor", "Preço", "Peso", "Estoque"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(TabelaProdutos);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -197,9 +215,9 @@ public class JFrameGestaoProdutos extends javax.swing.JFrame {
     private javax.swing.JButton Editar;
     private javax.swing.JButton Excluir;
     private javax.swing.JButton Novo;
+    private javax.swing.JTable TabelaProdutos;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
 }

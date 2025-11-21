@@ -1,4 +1,4 @@
-package grupo8.persistencia; // Ou utils
+    package grupo8.persistencia;
 
 import grupo8.produto.Produto;
 import java.io.*;
@@ -6,14 +6,28 @@ import java.util.ArrayList;
 
 public class GerenciadorDados {
     
-    private String caminhoArquivo = "dados_produtos.dat";
+    private String caminhoArquivo = "src/main/java/grupo8/dados/produtos.dat";
 
     // Salva a lista inteira no arquivo
     public void salvarLista(ArrayList<Produto> lista) {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(caminhoArquivo))) {
+        File arquivo = new File(caminhoArquivo);
+        
+        // ADICIONE ESTA LINHA PARA DEPURAR:
+        System.out.println("Tentando salvar em: " + arquivo.getAbsolutePath());
+
+        // --- CORREÇÃO: Cria as pastas se elas não existirem ---
+        if (arquivo.getParentFile() != null) {
+            arquivo.getParentFile().mkdirs(); 
+        }
+        // ------------------------------------------------------
+
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(arquivo))) {
             oos.writeObject(lista);
+            // E ESTA AQUI TAMBÉM:
+            System.out.println("Arquivo gravado com sucesso!");
         } catch (IOException e) {
             System.out.println("Erro ao salvar: " + e.getMessage());
+            e.printStackTrace(); // Ajuda a ver o erro exato no console
         }
     }
 
