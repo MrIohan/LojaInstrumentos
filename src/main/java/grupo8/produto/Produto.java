@@ -49,6 +49,10 @@ public abstract class Produto implements Serializable {
         idProduto++;
     }
     
+    public String getDescricaoEspecifica() {
+        return "";
+    }
+    
 
     public int getIdProduto() {
         return idProduto;

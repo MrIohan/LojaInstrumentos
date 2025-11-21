@@ -8,6 +8,7 @@ package grupo8.view;
  *
  * @author carpi
  */
+
 public class JDialogCadastroProdutos extends javax.swing.JDialog {
 
     /**
@@ -18,6 +19,7 @@ public class JDialogCadastroProdutos extends javax.swing.JDialog {
         initComponents();
         TabbedPane.remove(PainelCordas); 
         TabbedPane.remove(PainelSopro);
+        TabbedPane.remove(PainelPercussao);
     }
 
     /**
@@ -34,10 +36,11 @@ public class JDialogCadastroProdutos extends javax.swing.JDialog {
         ComboTipo = new javax.swing.JComboBox<>();
         PainelCordas = new javax.swing.JDesktopPane();
         PainelSopro = new javax.swing.JDesktopPane();
+        PainelPercussao = new javax.swing.JDesktopPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        ComboTipo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Instrumento Corda", "Instrumento Sompro", "Instrumento Percução", "Acessorio", "Equipamento" }));
+        ComboTipo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Acessorio", "Instrumento Corda", "Instrumento Sompro", "Instrumento Percussão" }));
         ComboTipo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ComboTipoActionPerformed(evt);
@@ -53,7 +56,7 @@ public class JDialogCadastroProdutos extends javax.swing.JDialog {
             .addGroup(PainelGeralLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(ComboTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(711, Short.MAX_VALUE))
+                .addContainerGap(707, Short.MAX_VALUE))
         );
         PainelGeralLayout.setVerticalGroup(
             PainelGeralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -91,6 +94,19 @@ public class JDialogCadastroProdutos extends javax.swing.JDialog {
 
         TabbedPane.addTab("Sopro", PainelSopro);
 
+        javax.swing.GroupLayout PainelPercussaoLayout = new javax.swing.GroupLayout(PainelPercussao);
+        PainelPercussao.setLayout(PainelPercussaoLayout);
+        PainelPercussaoLayout.setHorizontalGroup(
+            PainelPercussaoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 868, Short.MAX_VALUE)
+        );
+        PainelPercussaoLayout.setVerticalGroup(
+            PainelPercussaoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 458, Short.MAX_VALUE)
+        );
+
+        TabbedPane.addTab("Percussão", PainelPercussao);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -106,55 +122,82 @@ public class JDialogCadastroProdutos extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void ComboTipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ComboTipoActionPerformed
-        // TODO add your handling code here:
+        String selecionado = (String) ComboTipo.getSelectedItem();
+
+        // Remove tudo para limpar
+        TabbedPane.remove(PainelCordas);
+        TabbedPane.remove(PainelSopro);
+        TabbedPane.remove(PainelPercussao);
+
+        // Adiciona o certo
+        switch (selecionado) {
+            case "Instrumento Corda":
+                TabbedPane.addTab("Cordas", PainelCordas);
+                TabbedPane.setSelectedComponent(PainelCordas);
+                break;
+
+            case "Instrumento Sompro":
+                TabbedPane.addTab("Sopro", PainelSopro);
+                TabbedPane.setSelectedComponent(PainelSopro);
+                break;
+
+            case "Instrumento Percussão":
+                TabbedPane.addTab("Percussão", PainelPercussao);
+                TabbedPane.setSelectedComponent(PainelPercussao);
+                break;
+
+            default:
+                break;
+        }
     }//GEN-LAST:event_ComboTipoActionPerformed
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+    /* Set the Nimbus look and feel */
+    //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+    /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
+     */
+    try {
+        for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+            if ("Nimbus".equals(info.getName())) {
+                javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                break;
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(JDialogCadastroProdutos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(JDialogCadastroProdutos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(JDialogCadastroProdutos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(JDialogCadastroProdutos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
-
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                JDialogCadastroProdutos dialog = new JDialogCadastroProdutos(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
+    } catch (ClassNotFoundException ex) {
+        java.util.logging.Logger.getLogger(JDialogCadastroProdutos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+    } catch (InstantiationException ex) {
+        java.util.logging.Logger.getLogger(JDialogCadastroProdutos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+    } catch (IllegalAccessException ex) {
+        java.util.logging.Logger.getLogger(JDialogCadastroProdutos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+    } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        java.util.logging.Logger.getLogger(JDialogCadastroProdutos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
     }
+    //</editor-fold>
+
+    /* Create and display the dialog */
+    java.awt.EventQueue.invokeLater(new Runnable() {
+        public void run() {
+            JDialogCadastroProdutos dialog = new JDialogCadastroProdutos(new javax.swing.JFrame(), true);
+            dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+                @Override
+                public void windowClosing(java.awt.event.WindowEvent e) {
+                    System.exit(0);
+                }
+            });
+            dialog.setVisible(true);
+        }
+    });
+}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> ComboTipo;
     private javax.swing.JDesktopPane PainelCordas;
     private javax.swing.JDesktopPane PainelGeral;
+    private javax.swing.JDesktopPane PainelPercussao;
     private javax.swing.JDesktopPane PainelSopro;
     private javax.swing.JTabbedPane TabbedPane;
     // End of variables declaration//GEN-END:variables

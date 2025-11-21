@@ -3,6 +3,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package grupo8.view;
+import grupo8.persistencia.GerenciadorDados;
+import java.util.ArrayList;
+import grupo8.produto.Produto;
 
 /**
  *
@@ -13,8 +16,39 @@ public class JFrameGestaoProdutos extends javax.swing.JFrame {
     /**
      * Creates new form JFrameGestaoProdutos
      */
+    GerenciadorDados gerenciador = new GerenciadorDados();
+    ArrayList<Produto> listaProdutos = new ArrayList<>();
+    
     public JFrameGestaoProdutos() {
         initComponents();
+        atualizarTabela();
+    }
+    
+    private void atualizarTabela() {
+        // 1. Busca do arquivo
+        listaProdutos = gerenciador.carregarLista();
+        
+        // 2. Limpa a tabela visual
+        javax.swing.table.DefaultTableModel modelo = (javax.swing.table.DefaultTableModel) jTable1.getModel();
+        modelo.setRowCount(0);
+        
+        // 3. Preenche com os dados (Polimorfismo ajuda aqui!)
+        for (Produto p : listaProdutos) {
+            modelo.addRow(new Object[]{
+                // Assumindo que você tem getters na classe Produto
+                p.getIdProduto(),
+                p.getMarca(), 
+                p.getDataFabricacao(),
+                p.getMaterial(),
+                p.getCor(),
+                p.getPreco(),
+                p.getPeso(),
+                p.getQntEstoque(),
+                p.getPrazoGarantia(),
+                p.getDescricaoEspecifica()
+                // ... outros campos
+            });
+        }
     }
 
     /**
@@ -28,9 +62,9 @@ public class JFrameGestaoProdutos extends javax.swing.JFrame {
 
         jMenuItem1 = new javax.swing.JMenuItem();
         jPanel1 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        Novo = new javax.swing.JButton();
+        Editar = new javax.swing.JButton();
+        Excluir = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
 
@@ -38,21 +72,21 @@ public class JFrameGestaoProdutos extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jButton1.setText("Novo");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        Novo.setText("Novo");
+        Novo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                NovoActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Editar");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        Editar.setText("Editar");
+        Editar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                EditarActionPerformed(evt);
             }
         });
 
-        jButton3.setText("Excluir");
+        Excluir.setText("Excluir");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -60,11 +94,11 @@ public class JFrameGestaoProdutos extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jButton1)
+                .addComponent(Novo)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton2)
+                .addComponent(Editar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton3)
+                .addComponent(Excluir)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -72,9 +106,9 @@ public class JFrameGestaoProdutos extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(0, 7, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3)))
+                    .addComponent(Novo)
+                    .addComponent(Editar)
+                    .addComponent(Excluir)))
         );
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
@@ -112,13 +146,17 @@ public class JFrameGestaoProdutos extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void NovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NovoActionPerformed
+        // 1. Cria a janela de cadastro como Modal (bloqueia a janela de trás)
+        JDialogCadastroProdutos dialog = new JDialogCadastroProdutos(this, true);
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+        // 2. Mostra a janela
+        dialog.setVisible(true);
+    }//GEN-LAST:event_NovoActionPerformed
+
+    private void EditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditarActionPerformed
+
+    }//GEN-LAST:event_EditarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -156,9 +194,9 @@ public class JFrameGestaoProdutos extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
+    private javax.swing.JButton Editar;
+    private javax.swing.JButton Excluir;
+    private javax.swing.JButton Novo;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
