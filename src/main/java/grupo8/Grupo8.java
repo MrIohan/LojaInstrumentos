@@ -1,9 +1,11 @@
 package grupo8;
 
+import grupo8.papeis.Cliente;
 import grupo8.papeis.Funcionario;
 import grupo8.pessoas.Pessoa;
 import grupo8.pessoas.PessoaFisica;
 import grupo8.pessoas.PessoaJuridica;
+import grupo8.produto.Acessorio;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
@@ -32,12 +34,18 @@ public class Grupo8 {
         PessoaJuridica[] socioPJ1 = {pj2};
         pj1.setSociosPJ(socioPJ1);
 
-        System.out.println(pf1.toString());
-        System.out.println(pj1.exibirDados());
-        System.out.println(pj2.exibirDados());
+//        System.out.println(pf1.toString());
+//        System.out.println(pj1.exibirDados());
+//        System.out.println(pj2.exibirDados());
         
         var func1 = new Funcionario(pf1, "20423575737", "Vendedor", "15/10/2025", "CLT", "2700");
         System.out.println(func1.toString());
+        
+        var cliente1 = new Cliente(pj1);
+        System.out.println(cliente1.toString());
+        
+        var acessorio1 = new Acessorio("Braçadeira", "Todos os violões", "P001", "Braçadeira Gianini", "Gianini", "10/10/2025", "Brasil", "Gala condensada", "Branca", "50", "20", "5", "0");
+        System.out.println(acessorio1.toString());
         
 //        List<Pessoa> lista = Pessoa.carregar();
 //

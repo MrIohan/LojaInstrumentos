@@ -1,81 +1,74 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package grupo8.produto;
 
 public final class Acessorio extends Produto {
     
-    private final int id;
+    private static int idAcessorio = 0;
+    
     private String tipo;
     private String indicacao;
     
     public Acessorio(String tipo, String indicacao,
-                    String codigo, String descricao, String fabricante, String marca, 
-                    String dataFabricacao, String paisFabricacao, String material, 
-                    String cor, double preco, double peso, int estoque, int garantia) {
+                     String codigo, String descricao, String marca, String dataFabricacao, String paisFabricacao, 
+                     String material, String cor, String preco, String peso, String qntEstoque, String prazoGarantia) {
         
-        super(codigo, descricao, fabricante, marca, dataFabricacao, paisFabricacao, 
-              material, cor, preco, peso, estoque, garantia);
-        this.id = proximoId;
-        
+        super(codigo, descricao, marca, dataFabricacao, paisFabricacao, 
+              material, cor, preco, peso, qntEstoque, prazoGarantia);
         setTipo(tipo);
         setIndicacao(indicacao);
+        idAcessorio++;
     }
     
-    public int getID() {
-        return id;
+    public int getIdAcessorio() {
+        return idAcessorio;
     }
     
     public String getTipo() {
         return tipo;
     }
     
-    public final void setTipo(String tipo) {
-        tipo = (tipo == null ? "" : tipo.trim());
-        if(tipo.isEmpty()) {
-            throw new IllegalArgumentException("Tipo do acessório é obrigatório.\n");
-        } else {
-            this.tipo = tipo;
+    public void setTipo(String tipo) {
+        if (tipo == null || tipo.trim().isEmpty()) {
+            throw new IllegalArgumentException("Por favor, digite o tipo do acessório.\n");
         }
+
+        tipo = tipo.trim();
+
+        if (!tipo.matches("[\\p{L} ]+")){
+            throw new IllegalArgumentException("Tipo inválido. Por favor, digite somente letras.\n");
+        } 
+        
+        this.tipo = tipo;
     }
     
     public String getIndicacao() {
         return indicacao;
     }
     
-    public final void setIndicacao(String indicacao) {
-        indicacao = (indicacao == null ? "" : indicacao.trim());
-        if(indicacao.isEmpty()) {
-            throw new IllegalArgumentException("Indicação é obrigatória.\n");
-        } else {
-            this.indicacao = indicacao;
+    public void setIndicacao(String indicacao) {
+        if (indicacao == null || indicacao.trim().isEmpty()) {
+            throw new IllegalArgumentException("Por favor, digite os intrumentos indicados para este acessório.\n");
         }
+
+        tipo = tipo.trim();
+
+        if (!indicacao.matches("[\\p{L} ]+")){
+            throw new IllegalArgumentException("Indicação inválida. Por favor, digite somente letras.\n");
+        } 
+        
+        this.indicacao = indicacao;
     }
     
     @Override
     public String toString() {
         return 
-            "\nAcessório [ID: " + id + "]" +
-            "\nTipo: " + tipo +
-            "\nIndicação: " + indicacao +
-            "\nCódigo: " + getCodigo() +
-            "\nDescrição: " + getDescricao() +
-            "\nFabricante: " + getFabricante() +
-            "\nMarca: " + getMarca() +
-            "\nData Fabricação: " + getDataFabricacao() +
-            "\nPaís Fabricação: " + getPaisFabricacao() +
-            "\nMaterial: " + getMaterial() +
-            "\nCor: " + getCor() +
-            "\nPreço: R$ " + String.format("%.2f", getPreco()) +
-            "\nPeso: " + getPeso() + " kg" +
-            "\nEstoque: " + getEstoque() +
-            "\nGarantia: " + getGarantia() + " meses" +
-            "\n\n---------------------------------------------------------------";
+            "\nDADOS DO ACESSÓRIO [ID: " + idAcessorio + "]\n" +
+            "\n    Tipo do Acessório: " + tipo +
+            "\n    Instrumentos indicados: " + indicacao + "\n" +
+            super.toString() + "\n";
     }
     
     public void salvar() throws java.io.FileNotFoundException, java.io.IOException {
-        try (java.io.FileOutputStream fileOut = new java.io.FileOutputStream("src/data/Produto"+ id +"_ACS.ser");
+        try (java.io.FileOutputStream fileOut = new java.io.FileOutputStream("src/data/Produto"+ idProduto +"_ACS.ser");
              java.io.ObjectOutputStream out = new java.io.ObjectOutputStream(fileOut)) {
              out.writeObject(this);
         }

@@ -220,7 +220,7 @@ public final class Funcionario implements Serializable {
                 this.salario = salarioFormatado;
             }
         } catch(Exception e) {
-            throw new IllegalArgumentException("Por favot, digite somente os números do salário, usando ponto como separador decimal.");
+            throw new IllegalArgumentException("Por favor, digite somente os números do salário, usando ponto como separador decimal.");
         }
     }
 
@@ -259,44 +259,36 @@ public final class Funcionario implements Serializable {
         }
     }
     
-    public void salvar() throws FileNotFoundException, IOException {
-        try (FileOutputStream fileOut = new FileOutputStream("src/data/Funcionario"+ contador +".ser");
-             ObjectOutputStream out = new ObjectOutputStream(fileOut)) {
-             out.writeObject(this);
-        }
-    }
-    
     @Override
     public String toString() {
         var sb = new StringBuilder();
         
-        sb.append("\nDADOS FUNCIONÁRIO\n")
-          .append("\nMatrícula: ").append(matricula);
+        sb.append("\nDADOS DO FUNCIONÁRIO\n")
+          .append("\n    Matrícula: ").append(matricula);
         
-        switch(dadosPessoa) {
-            case PessoaFisica pf -> {
-                sb.append("\nNome: ").append(pf.getNome())
-                  .append("\nData de Nascimento: ").append(pf.getDtNasc().format(formato))
-                  .append(" (Idade: ").append(pf.getIdade()).append(" anos)")
-                  .append("\nTelefone: ").append(pf.getTelefone1())
-                  .append("\nEmail: ").append((emailCorporativo == null ? pf.getEmail() : emailCorporativo))
-                  .append("\n");
-            }
-            case PessoaJuridica pj -> {
-                
-            }
-            default -> {}
-        }
+        sb.append(dadosPessoa.toString()).append("\n");
         
-        sb.append("\nPIS: ").append(pis)
-          .append("\nCargo: ").append(cargo)
-          .append("\nStatus: ").append(status)
-          .append("\nData de Admissão: ").append(dtAdmissao.format(formato))
-          .append("\nData de Demissão: ").append((dtDemissao == null ? "" : dtDemissao.format(formato)))
-          .append("\nTipo de Contrato: ").append(tipoContrato)
-          .append("\nSalário: R$").append(salario);
+        sb.append("\n    PIS: ").append(pis)
+          .append("\n    Cargo: ").append(cargo)
+          .append("\n    Status: ").append(status)
+          .append("\n    Data de Admissão: ").append(dtAdmissao.format(formato))
+          .append("\n    Data de Demissão: ").append((dtDemissao == null ? "" : dtDemissao.format(formato)))
+          .append("\n    Tipo de Contrato: ").append(tipoContrato)
+          .append("\n    Salário: R$").append(String.format("%.2f", salario));
                 
         return sb.toString();
+    }
+    
+    public void salvar() throws FileNotFoundException, IOException {
+        File pasta = new File("data");
+        if (!pasta.exists()) {
+            pasta.mkdir();
+        }
+        
+        try (FileOutputStream fileOut = new FileOutputStream("src/data/Funcionario"+ matricula +".ser");
+             ObjectOutputStream out = new ObjectOutputStream(fileOut)) {
+             out.writeObject(this);
+        }
     }
     
     public static List<Funcionario> carregar() throws IOException, ClassNotFoundException {

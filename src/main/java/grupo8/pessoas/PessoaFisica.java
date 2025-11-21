@@ -126,7 +126,6 @@ public final class PessoaFisica extends Pessoa {
     @Override
     public String toString() {
         return 
-            "\nDADOS PF (ID: " + id + ")\n" +
             "\n    Nome: " + nome +
             "\n    CPF: " + cpf +
             "\n    Data de Nascimento: " + dtNasc.format(formato) +

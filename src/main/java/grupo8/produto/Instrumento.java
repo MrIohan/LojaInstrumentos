@@ -4,58 +4,80 @@
  */
 package grupo8.produto;
 
-public class Instrumento extends Produto {
+public abstract class Instrumento extends Produto {
     
-    private final int id;
-    private String numSerie;
-    private String tipoSaida;
-    private String nivelProfissional;
+    public static int idInstrumento = 0;
+
     private String fabricante;
+    private String numSerie;
+    private String tipoProducaoSom; //implementar uma estrutura de constantes
+    private String nivelProfissional; 
     
-    public Instrumento(String numSerie, String tipoSaida, String nivelProfissional,
-                      String codigo, String descricao, String fabricante, String marca, 
-                      String dataFabricacao, String paisFabricacao, String material, 
-                      String cor, double preco, double peso, int estoque, int garantia) {
+    public Instrumento(String fabricante, String numSerie, String tipoProducaoSom, String nivelProfissional,
+                      String codigo, String descricao, String marca, String dataFabricacao, String paisFabricacao, 
+                      String material, String cor, String preco, String peso, String qntEstoque, String prazoGarantia) {
         
-        super(codigo, descricao, fabricante, marca, dataFabricacao, paisFabricacao, 
-              material, cor, preco, peso, estoque, garantia);
-        this.id = proximoId;
-        
+        super(codigo, descricao, marca, dataFabricacao, paisFabricacao, 
+              material, cor, preco, peso, qntEstoque, prazoGarantia);
+        setFabricante(fabricante);
         setNumSerie(numSerie);
-        setTipoSaida(tipoSaida);
+        setTipoProducaoSom(tipoProducaoSom);
         setNivelProfissional(nivelProfissional);
+        idInstrumento++;
     }
-    
-    public int getID() {
-        return id;
+
+    public String getFabricante() {
+        return fabricante;
     }
-    
+
+    public final void setFabricante(String fabricante) {
+        if (fabricante == null || fabricante.trim().isEmpty()) {
+            throw new IllegalArgumentException("Por favor, digite o fabricante do instrumento.\n");
+        }
+
+        fabricante = fabricante.trim();
+
+        if (!fabricante.matches("[\\p{L} ]+")){
+            throw new IllegalArgumentException("Fabricante inválido. Por favor, digite somente letras.\n");
+        } 
+        
+        this.fabricante = fabricante;
+    }
+
     public String getNumSerie() {
         return numSerie;
     }
     
     public final void setNumSerie(String numSerie) {
-        numSerie = (numSerie == null ? "" : numSerie.trim());
-        if(numSerie.isEmpty()) {
-            throw new IllegalArgumentException("Número de série é obrigatório.\n");
-        } else if(!numSerie.matches("[A-Z0-9]{5,15}")) {
-            throw new IllegalArgumentException("Número de série deve conter 5-15 caracteres alfanuméricos.\n");
-        } else {
-            this.numSerie = numSerie;
+        if (numSerie == null || numSerie.trim().isEmpty()) {
+            throw new IllegalArgumentException("Por favor, digite o núemro de série do instrumento.\n");
         }
+
+        numSerie = numSerie.trim();
+
+        if (!numSerie.matches("\\d+")){
+            throw new IllegalArgumentException("Número de série inválido. Por favor, digite somente números.\n");
+        } 
+        
+        this.numSerie = numSerie;
     }
     
-    public String getTipoSaida() {
-        return tipoSaida;
+    public String getTipoProducaoSom() {
+        return tipoProducaoSom;
     }
     
-    public final void setTipoSaida(String tipoSaida) {
-        tipoSaida = (tipoSaida == null ? "" : tipoSaida.trim());
-        if(tipoSaida.isEmpty()) {
-            throw new IllegalArgumentException("Tipo de saída é obrigatório.\n");
-        } else {
-            this.tipoSaida = tipoSaida;
+    public final void setTipoProducaoSom(String tipoProducaoSom) {
+        if (tipoProducaoSom == null || tipoProducaoSom.trim().isEmpty()) {
+            throw new IllegalArgumentException("Por favor, digite o tipo de produção de som do instrumento.\n");
         }
+
+        tipoProducaoSom = tipoProducaoSom.trim();
+
+        if (!fabricante.matches("[\\p{L} ]+")){
+            throw new IllegalArgumentException("Tipo de produção de som inválido. Por favor, digite somente letras.\n");
+        } 
+        
+        this.tipoProducaoSom = tipoProducaoSom;
     }
     
     public String getNivelProfissional() {
@@ -63,42 +85,26 @@ public class Instrumento extends Produto {
     }
     
     public final void setNivelProfissional(String nivelProfissional) {
-        nivelProfissional = (nivelProfissional == null ? "" : nivelProfissional.trim());
-        if(nivelProfissional.isEmpty()) {
-            throw new IllegalArgumentException("Nível profissional é obrigatório.\n");
-        } else if(!nivelProfissional.matches("(?i)iniciante|intermediario|profissional")) {
-            throw new IllegalArgumentException("Nível profissional deve ser: Iniciante, Intermediário ou Profissional.\n");
-        } else {
-            this.nivelProfissional = nivelProfissional;
+        if (nivelProfissional == null || nivelProfissional.trim().isEmpty()) {
+            throw new IllegalArgumentException("Por favor, digite o nível profissional indicado para este instrumento.\n");
         }
+
+        nivelProfissional = nivelProfissional.trim();
+
+        if (!fabricante.matches("[\\p{L} ]+")){
+            throw new IllegalArgumentException("Nível profissional inválido. Por favor, digite somente letras.\n");
+        } 
+        
+        this.nivelProfissional = nivelProfissional;
     }
     
     @Override
     public String toString() {
-        return 
-            "\nInstrumento [ID: " + id + "]" +
+        return
+            super.toString() +
+            "\nFabricante: " + fabricante +
             "\nNúmero de Série: " + numSerie +
-            "\nTipo de Saída: " + tipoSaida +
-            "\nNível Profissional: " + nivelProfissional +
-            "\nCódigo: " + getCodigo() +
-            "\nDescrição: " + getDescricao() +
-            "\nFabricante: " + getFabricante() +
-            "\nMarca: " + getMarca() +
-            "\nData Fabricação: " + getDataFabricacao() +
-            "\nPaís Fabricação: " + getPaisFabricacao() +
-            "\nMaterial: " + getMaterial() +
-            "\nCor: " + getCor() +
-            "\nPreço: R$ " + String.format("%.2f", getPreco()) +
-            "\nPeso: " + getPeso() + " kg" +
-            "\nEstoque: " + getEstoque() +
-            "\nGarantia: " + getGarantia() + " meses" +
-            "\n\n---------------------------------------------------------------";
-    }
-    
-    public void salvar() throws java.io.FileNotFoundException, java.io.IOException {
-        try (java.io.FileOutputStream fileOut = new java.io.FileOutputStream("src/data/Produto"+ id +"_INS.ser");
-             java.io.ObjectOutputStream out = new java.io.ObjectOutputStream(fileOut)) {
-             out.writeObject(this);
-        }
+            "\nTipo de Produção de Som: " + tipoProducaoSom +
+            "\nNível Profissional: " + nivelProfissional;
     }
 }

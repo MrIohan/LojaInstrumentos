@@ -197,7 +197,6 @@ public final class PessoaJuridica extends Pessoa {
     @Override
     public String toString() {
         return
-        "\nDADOS PJ (ID: " + id + ")\n" +
         "\n    Razão Social: " + razaoSocial +
         "\n    Nome Fantasia: " +
         "\n    CNPJ: " + cnpj +
