@@ -10,6 +10,7 @@ public class Instrumento extends Produto {
     private String numSerie;
     private String tipoSaida;
     private String nivelProfissional;
+    private String fabricante;
     
     public Instrumento(String numSerie, String tipoSaida, String nivelProfissional,
                       String codigo, String descricao, String fabricante, String marca, 

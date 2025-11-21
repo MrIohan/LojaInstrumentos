@@ -1,61 +1,24 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package grupo8.produto;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 
 public class Produto implements Serializable {
     public static final long serialVersionUID = 1L;
-    private static int qntProduto = 0;
-    protected static int proximoId = 1;
-    private static int estoqueMaximo = 1000; //statico sem ser contador...
+    public static int idProduto = 0;
 
-    public static int getQntProduto() {
-        return qntProduto;
-    }
-
-    public static void setQntProduto(int aQntProduto) {
-        qntProduto = aQntProduto;
-    }
+    private String codigo; // alfanumérico
+    private String descricao; //letras
     
-    public static int getEstoqueMaximo() {
-        return estoqueMaximo;
-    }
-    
-    public static void setEstoqueMaximo(int estoqueMaximo) {
-        if (estoqueMaximo <= 0) {
-            throw new IllegalArgumentException("Estoque máximo deve ser positivo.\n");
-        }
-        Produto.estoqueMaximo = estoqueMaximo;
-    }
-    
-    public static boolean validarCodigo(String codigo) {
-        codigo = (codigo == null ? "" : codigo.trim());
-        if (codigo.isEmpty()) {
-            return false;
-        }
-        return codigo.matches("[A-Z0-9]{3,10}");
-    }
-    
-    public static boolean estoqueExcedido(int estoqueAtual) { // ✅ MÉTODO STATIC ADICIONAL
-        return estoqueAtual > estoqueMaximo;
-    }
-    
-    private final int id;
-    private String codigo;
-    private String descricao;
-    private String fabricante;
-    private String marca;
-    private String dataFabricacao;
+    private String marca; 
+    private LocalDate dataFabricacao; 
     private String paisFabricacao;
     private String material;
     private String cor;
     private double preco;
-    private double peso;
-    private int estoque;
-    private int garantia;
+    private double peso; //
+    private int qtdEstoque;
+    private int prazoGarantia; // Meses
     
     public Produto(String codigo, String descricao, String fabricante, String marca, 
                    String dataFabricacao, String paisFabricacao, String material, 
