@@ -12,6 +12,7 @@ import grupo8.produto.Produto;
  *
  * @author carpi
  */
+
 public class JFrameGestaoProdutos extends javax.swing.JFrame {
 
     /**
@@ -105,6 +106,11 @@ public class JFrameGestaoProdutos extends javax.swing.JFrame {
         });
 
         Excluir.setText("Excluir");
+        Excluir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ExcluirActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -165,51 +171,129 @@ public class JFrameGestaoProdutos extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void NovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NovoActionPerformed
-        // 1. Cria a janela de cadastro como Modal (bloqueia a janela de trás)
+        // 1. Cria a janela
         JDialogCadastroProdutos dialog = new JDialogCadastroProdutos(this, true);
 
-        // 2. Mostra a janela
+        // 2. Abre a janela (O código PAUSA aqui até você fechar o cadastro)
         dialog.setVisible(true);
+
+        // --- A MÁGICA É AQUI ---
+        // 3. Assim que a janela fecha, a gente manda recarregar a tabela do arquivo
+        atualizarTabela();
     }//GEN-LAST:event_NovoActionPerformed
 
     private void EditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditarActionPerformed
+        
+        // 1. Verifica seleção
+        int linha = TabelaProdutos.getSelectedRow();
+        if (linha == -1) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Selecione um produto para editar.");
+            return;
+        }
 
+        // 2. Pega o objeto REAL da lista na memória
+        Produto produtoSelecionado = listaProdutos.get(linha);
+
+        // 3. Abre a tela de cadastro
+        JDialogCadastroProdutos dialog = new JDialogCadastroProdutos(this, true);
+
+        // 4. Passa os dados para a tela preencher
+        dialog.preencherDados(produtoSelecionado);
+
+        // 5. Mostra a tela (O código PAUSA aqui esperando você salvar e fechar)
+        dialog.setVisible(true);
+
+        // 6. SALVAMENTO FINAL (O Pulo do Gato)
+        // Como passamos o objeto por referência, o Dialog atualizou os dados dele na memória RAM.
+        // Agora precisamos gravar a lista inteira (com o produto modificado) no arquivo.
+        gerenciador.salvarLista(listaProdutos);
+
+        // 7. Atualiza a tabela visual
+        atualizarTabela();
     }//GEN-LAST:event_EditarActionPerformed
+
+    private void ExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ExcluirActionPerformed
+        // TODO add your handling code here:
+        int linhaSelecionada = TabelaProdutos.getSelectedRow();
+
+        if (linhaSelecionada == -1) {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                    "Por favor, selecione um produto na tabela para excluir.",
+                    "Aviso",
+                    javax.swing.JOptionPane.WARNING_MESSAGE);
+            return; // Para o código aqui
+        }
+
+        // 2. Pergunta se tem certeza (Confirmação)
+        // Pega o nome do produto para mostrar na mensagem (Coluna 2 é o Nome/Descrição)
+        String nomeProduto = TabelaProdutos.getValueAt(linhaSelecionada, 2).toString();
+
+        int opcao = javax.swing.JOptionPane.showConfirmDialog(this,
+                "Tem certeza que deseja excluir o produto:\n" + nomeProduto + "?",
+                "Confirmar Exclusão",
+                javax.swing.JOptionPane.YES_NO_OPTION,
+                javax.swing.JOptionPane.QUESTION_MESSAGE);
+
+        // 3. Se o usuário clicou em SIM
+        if (opcao == javax.swing.JOptionPane.YES_OPTION) {
+            try {
+                // A MÁGICA: Como sua tabela foi montada lendo a listaProdutos sequencialmente,
+                // o índice da linha (0, 1, 2...) é IGUAL ao índice na ArrayList.
+
+                // Remove da memória
+                listaProdutos.remove(linhaSelecionada);
+
+                // Salva a lista nova no arquivo (Sobrescreve o antigo)
+                gerenciador.salvarLista(listaProdutos);
+
+                // Atualiza a tela
+                atualizarTabela();
+
+                javax.swing.JOptionPane.showMessageDialog(this, "Produto excluído com sucesso!");
+
+            } catch (Exception e) {
+                javax.swing.JOptionPane.showMessageDialog(this,
+                        "Erro ao excluir: " + e.getMessage(),
+                        "Erro",
+                        javax.swing.JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_ExcluirActionPerformed
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+    /* Set the Nimbus look and feel */
+    //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+    /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
+     */
+    try {
+        for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+            if ("Nimbus".equals(info.getName())) {
+                javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                break;
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(JFrameGestaoProdutos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(JFrameGestaoProdutos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(JFrameGestaoProdutos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(JFrameGestaoProdutos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new JFrameGestaoProdutos().setVisible(true);
-            }
-        });
+    } catch (ClassNotFoundException ex) {
+        java.util.logging.Logger.getLogger(JFrameGestaoProdutos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+    } catch (InstantiationException ex) {
+        java.util.logging.Logger.getLogger(JFrameGestaoProdutos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+    } catch (IllegalAccessException ex) {
+        java.util.logging.Logger.getLogger(JFrameGestaoProdutos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+    } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        java.util.logging.Logger.getLogger(JFrameGestaoProdutos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
     }
+    //</editor-fold>
+
+    /* Create and display the form */
+    java.awt.EventQueue.invokeLater(new Runnable() {
+        public void run() {
+            new JFrameGestaoProdutos().setVisible(true);
+        }
+    });
+}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Editar;

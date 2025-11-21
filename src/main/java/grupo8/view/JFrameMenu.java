@@ -53,6 +53,11 @@ public class JFrameMenu extends javax.swing.JFrame {
         jMenu3.add(jMenuItem1);
 
         jMenuItem2.setText("Produtos");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
         jMenu3.add(jMenuItem2);
 
         jMenuBar1.add(jMenu3);
@@ -83,6 +88,22 @@ public class JFrameMenu extends javax.swing.JFrame {
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        // TODO add your handling code here:
+        // 1. Cria a instância da tela de Gestão de Produtos
+        JFrameGestaoProdutos telaProdutos = new JFrameGestaoProdutos();
+
+        // 2. (Opcional) Faz a tela aparecer no centro do monitor, não no canto
+        telaProdutos.setLocationRelativeTo(null);
+
+        // 3. (Importante) Define que ao fechar essa tela, SÓ ELA fecha (não o sistema todo)
+        // Se deixar o padrão (EXIT_ON_CLOSE), ao fechar produtos, o Menu fecha junto.
+        telaProdutos.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+
+        // 4. Mostra a tela
+        telaProdutos.setVisible(true);
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     /**
      * @param args the command line arguments
