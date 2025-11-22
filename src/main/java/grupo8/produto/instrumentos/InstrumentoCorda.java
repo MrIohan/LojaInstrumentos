@@ -14,17 +14,16 @@ public final class InstrumentoCorda extends Instrumento {
     private String formatoCorpo;
     private String corEscudo;
     
-    public InstrumentoCorda(String tipo, String numCorda, String encordoamento, String captadores,
-                           String numTrastes, String materialBraco, String encaixeBraco, 
-                           String formatoCorpo, String corEscudo,
-                           String numSerie, String tipoProducaoSom, String nivelProfissional,
-                           String codigo, String descricao, String fabricante, String marca, 
-                           String dataFabricacao, String paisFabricacao, String material, 
-                           String cor, String preco, String peso, String estoque, String garantia) {
-        
-        super(numSerie, tipoProducaoSom, nivelProfissional, codigo, descricao, fabricante, marca,
-              dataFabricacao, paisFabricacao, material, cor, preco, peso, estoque, garantia);
-                
+    public InstrumentoCorda(String tipo, String numCorda, String encordoamento, String captadores, String numTrastes, 
+                            String materialBraco, String encaixeBraco, String formatoCorpo, String corEscudo,
+                            String fabricante, String numSerie, String tipoProducaoSom, String nivelProfissional,
+                            String codigo, String descricao, String marca, String dataFabricacao, String paisFabricacao, 
+                            String material, String cor, String preco, String peso, String estoque, String prazoGarantia){
+    
+        super(fabricante, numSerie, tipoProducaoSom, nivelProfissional, 
+                codigo, descricao, marca, dataFabricacao, paisFabricacao, 
+                material, cor, preco, peso, estoque, prazoGarantia);
+            
         setTipo(tipo);
         setNumCorda(numCorda);
         setEncordoamento(encordoamento);

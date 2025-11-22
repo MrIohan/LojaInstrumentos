@@ -28,7 +28,7 @@ public abstract class Produto implements Serializable {
     private double preco;
     private int peso; //guardar em gramas, mas, exibir em quilos.
     private int qntEstoque;
-    private int prazoGarantia; // Meses
+    public int prazoGarantia; // Meses
     //FABRICANTE FOI PARA INSTRUMENTO
     
     public Produto(String codigo, String descricao, String marca, 

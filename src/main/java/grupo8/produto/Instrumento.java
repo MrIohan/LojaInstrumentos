@@ -19,6 +19,7 @@ public abstract class Instrumento extends Produto {
         
         super(codigo, descricao, marca, dataFabricacao, paisFabricacao, 
               material, cor, preco, peso, qntEstoque, prazoGarantia);
+        
         setFabricante(fabricante);
         setNumSerie(numSerie);
         setTipoProducaoSom(tipoProducaoSom);
@@ -73,7 +74,7 @@ public abstract class Instrumento extends Produto {
 
         tipoProducaoSom = tipoProducaoSom.trim();
 
-        if (!fabricante.matches("[\\p{L} ]+")){
+        if (!tipoProducaoSom.matches("[\\p{L} ]+")){
             throw new IllegalArgumentException("Tipo de produção de som inválido. Por favor, digite somente letras.\n");
         } 
         
@@ -91,7 +92,7 @@ public abstract class Instrumento extends Produto {
 
         nivelProfissional = nivelProfissional.trim();
 
-        if (!fabricante.matches("[\\p{L} ]+")){
+        if (!nivelProfissional.matches("[\\p{L} ]+")){
             throw new IllegalArgumentException("Nível profissional inválido. Por favor, digite somente letras.\n");
         } 
         

@@ -14,14 +14,16 @@ public final class Bateria extends Instrumento {
     private String tipoAro;
     
     public Bateria(String numTons, String numPecas, String materialPele, String tamanhoCaixa,
-                  String tamanhoBumbo, String tipoPrato, String tipoBaqueta, String tipoAro,
-                  String numSerie, String tipoProducaoSom, String nivelProfissional,
-                  String codigo, String descricao, String fabricante, String marca, 
-                  String dataFabricacao, String paisFabricacao, String material, 
-                  String cor, String preco, String peso, String estoque, String garantia) {
+              String tamanhoBumbo, String tipoPrato, String tipoBaqueta, String tipoAro,
+              String fabricante, String numSerie, String tipoProducaoSom, String nivelProfissional,
+              String codigo, String descricao, String marca, 
+              String dataFabricacao, String paisFabricacao, String material, 
+              String cor, String preco, String peso, String estoque, String prazoGarantia) {
+        
+        
         
         super(numSerie, tipoProducaoSom, nivelProfissional, codigo, descricao, fabricante, marca,
-              dataFabricacao, paisFabricacao, material, cor, preco, peso, estoque, garantia);
+              dataFabricacao, paisFabricacao, material, cor, preco, peso, estoque, prazoGarantia);
         
         setNumTons(numTons);
         setNumPecas(numPecas);

@@ -10,22 +10,21 @@ public final class InstrumentoSopro extends Instrumento {
     private String chave;
     private String infoAdicionais;
     
-    public InstrumentoSopro(String tipo, String afinacao, String embocadura, String chave,
-                           String infoAdicionais, String numSerie, String tipoProducaoSom, 
-                           String nivelProfissional, String codigo, String descricao, 
-                           String fabricante, String marca, String dataFabricacao, 
-                           String paisFabricacao, String material, String cor, String preco, 
-                           String peso, String estoque, String garantia) {
-        
-        super(numSerie, tipoProducaoSom, nivelProfissional, codigo, descricao, fabricante, marca,
-              dataFabricacao, paisFabricacao, material, cor, preco, peso, estoque, garantia);
-        
+    public InstrumentoSopro(String tipo, String afinacao, String embocadura, String chave, String infoAdicionais,
+                            String fabricante, String numSerie, String tipoProducaoSom, String nivelProfissional,
+                            String codigo, String descricao, String marca, String dataFabricacao, String paisFabricacao, 
+                            String material, String cor, String preco, String peso, String estoque, String prazoGarantia){
+    
+        super(fabricante, numSerie, tipoProducaoSom, nivelProfissional,  // ← ORDEM CORRETA!
+              codigo, descricao, marca, dataFabricacao, paisFabricacao, 
+              material, cor, preco, peso, estoque, prazoGarantia);
+    
         setTipo(tipo);
         setAfinacao(afinacao);
         setEmbocadura(embocadura);
         setChave(chave);
         setInfoAdicionais(infoAdicionais);
-    }
+}
     
     public String getTipo() {
         return tipo;
