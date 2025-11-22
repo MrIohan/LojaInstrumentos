@@ -4,17 +4,74 @@
  */
 package grupo8.view;
 
+import java.util.ArrayList;
+import grupo8.produto.Produto;
+
 /**
  *
  * @author carpi
  */
 public class JFrameTelaVenda extends javax.swing.JFrame {
 
+    private grupo8.vendas.Venda vendaAtual;
+    private grupo8.produto.Produto produtoAtual = null;
+    private grupo8.persistencia.GerenciadorDados gerenciador = new grupo8.persistencia.GerenciadorDados();
+    private double totalPagoAcumulado = 0.0;
+
     /**
      * Creates new form JFrameTelaVenda
      */
     public JFrameTelaVenda() {
         initComponents();
+        iniciarNovaVenda();
+    }
+
+    private void iniciarNovaVenda() {
+        vendaAtual = new grupo8.vendas.Venda("");
+        produtoAtual = null;
+        totalPagoAcumulado = 0.0; // Zera pagamentos
+
+        limparCamposProduto();
+        atualizarTabelaItens();
+        atualizarTotais();
+
+        LabelLogs.setText("Venda Iniciada.");
+        TextFieldCliente.setText("");
+        TextFieldIdentificacaoCliente.setText("");
+        TextFieldSubTotal.setText("0,00");
+        TextFieldAPagar.setText("0,00");
+        TextFieldPagamentos.setText("0,00");
+        TextFieldTroco.setText("0,00");
+
+        ButtonPagar.setText("PAGAR");
+    }
+
+    private void limparCamposProduto() {
+        TextFieldDescricaoProduto.setText("");
+        TextFieldQuantidade.setText("");
+        TextFieldValorTotal.setText("");
+        // TextFieldValorUnitario.setText(""); // Se tiver no design
+        produtoAtual = null;
+    }
+
+    private void atualizarTotais() {
+        double total = vendaAtual.getValorTotal();
+        TextFieldSubTotal.setText(String.format("%.2f", total));
+        TextFieldAPagar.setText(String.format("%.2f", total));
+    }
+
+    private void atualizarTabelaItens() {
+        javax.swing.table.DefaultTableModel modelo = (javax.swing.table.DefaultTableModel) TableItemVenda.getModel();
+        modelo.setRowCount(0);
+        for (grupo8.vendas.ItemVenda item : vendaAtual.getItens()) {
+            modelo.addRow(new Object[]{
+                item.getProduto().getIdProduto(),
+                item.getProduto().getDescricao(),
+                item.getQuantidade(),
+                String.format("%.2f", item.getPrecoUnitario()),
+                String.format("%.2f", item.getSubtotal())
+            });
+        }
     }
 
     /**
@@ -26,21 +83,412 @@ public class JFrameTelaVenda extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jScrollPane1 = new javax.swing.JScrollPane();
+        TableItemVenda = new javax.swing.JTable();
+        LabelProduto = new javax.swing.JLabel();
+        ButtonProcuraProduto = new javax.swing.JButton();
+        LabelQuantidade = new javax.swing.JLabel();
+        TextFieldDescricaoProduto = new javax.swing.JTextField();
+        TextFieldQuantidade = new javax.swing.JTextField();
+        TextFieldValorTotal = new javax.swing.JTextField();
+        LabelValorUnitario = new javax.swing.JLabel();
+        LabelTotalItem = new javax.swing.JLabel();
+        TextFieldTotalItem = new javax.swing.JTextField();
+        LabelSubTotal = new javax.swing.JLabel();
+        TextFieldSubTotal = new javax.swing.JTextField();
+        TextFieldAPagar = new javax.swing.JTextField();
+        LabelAPagar = new javax.swing.JLabel();
+        LabelPagamentos = new javax.swing.JLabel();
+        LabelTroco = new javax.swing.JLabel();
+        TextFieldPagamentos = new javax.swing.JTextField();
+        TextFieldTroco = new javax.swing.JTextField();
+        LabelCliente = new javax.swing.JLabel();
+        TextFieldCliente = new javax.swing.JTextField();
+        LabelIdentificacaoCliente = new javax.swing.JLabel();
+        TextFieldIdentificacaoCliente = new javax.swing.JTextField();
+        ButtonPagar = new javax.swing.JButton();
+        ButtonCancelar = new javax.swing.JButton();
+        LabelLogs = new javax.swing.JLabel();
+        LabelTitulo = new javax.swing.JLabel();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        TableItemVenda.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
+            },
+            new String [] {
+                "ID", "Descrição", "Qtd", "Vl Unit", "Vl Total"
+            }
+        ));
+        jScrollPane1.setViewportView(TableItemVenda);
+        if (TableItemVenda.getColumnModel().getColumnCount() > 0) {
+            TableItemVenda.getColumnModel().getColumn(0).setHeaderValue("ID");
+            TableItemVenda.getColumnModel().getColumn(1).setHeaderValue("Descrição");
+            TableItemVenda.getColumnModel().getColumn(2).setHeaderValue("Qtd");
+            TableItemVenda.getColumnModel().getColumn(3).setHeaderValue("Vl Unit");
+            TableItemVenda.getColumnModel().getColumn(4).setHeaderValue("Vl Total");
+        }
+
+        LabelProduto.setText("Produto:");
+
+        ButtonProcuraProduto.setText("🔍");
+        ButtonProcuraProduto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ButtonProcuraProdutoActionPerformed(evt);
+            }
+        });
+
+        LabelQuantidade.setText("Quantidade:");
+
+        TextFieldDescricaoProduto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TextFieldDescricaoProdutoActionPerformed(evt);
+            }
+        });
+
+        TextFieldQuantidade.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TextFieldQuantidadeActionPerformed(evt);
+            }
+        });
+
+        LabelValorUnitario.setText("Valor Unitário:");
+
+        LabelTotalItem.setText("Total Item:");
+
+        LabelSubTotal.setText("Sub Total:");
+
+        LabelAPagar.setText("À Pagar:");
+
+        LabelPagamentos.setText("Pagamentos");
+
+        LabelTroco.setText("Troco:");
+
+        TextFieldTroco.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TextFieldTrocoActionPerformed(evt);
+            }
+        });
+
+        LabelCliente.setText("Cliente");
+
+        TextFieldCliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TextFieldClienteActionPerformed(evt);
+            }
+        });
+
+        LabelIdentificacaoCliente.setText("CPF/CNPJ:");
+
+        ButtonPagar.setText("PAGAR");
+        ButtonPagar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ButtonPagarActionPerformed(evt);
+            }
+        });
+
+        ButtonCancelar.setText("CANCELAR");
+
+        LabelLogs.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        LabelLogs.setText("LOGS DO SISTEMAS....");
+
+        LabelTitulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        LabelTitulo.setText("LOJA DE INSTUMENTOS MUSICAIS");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(LabelTitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(TextFieldIdentificacaoCliente, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(LabelQuantidade)
+                                            .addComponent(TextFieldQuantidade, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGap(12, 12, 12)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(LabelValorUnitario)
+                                            .addComponent(TextFieldValorTotal)))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(LabelPagamentos)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(TextFieldPagamentos)
+                                                .addGap(12, 12, 12)))
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(LabelTroco)
+                                                .addGap(146, 146, 146))
+                                            .addComponent(TextFieldTroco)))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                        .addComponent(TextFieldDescricaoProduto, javax.swing.GroupLayout.PREFERRED_SIZE, 328, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(ButtonProcuraProduto, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(TextFieldTotalItem, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(TextFieldCliente, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(LabelProduto)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                    .addComponent(LabelSubTotal)
+                                                    .addComponent(TextFieldSubTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                .addGap(12, 12, 12)
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                    .addComponent(LabelAPagar)
+                                                    .addComponent(TextFieldAPagar, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                            .addComponent(LabelTotalItem)
+                                            .addComponent(LabelCliente))
+                                        .addGap(0, 0, Short.MAX_VALUE))
+                                    .addComponent(LabelLogs, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(18, 18, 18))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(LabelIdentificacaoCliente)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(ButtonCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(ButtonPagar, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 464, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(LabelTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(LabelProduto)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(ButtonProcuraProduto, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(TextFieldDescricaoProduto, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(LabelQuantidade)
+                            .addComponent(LabelValorUnitario))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(TextFieldQuantidade, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(TextFieldValorTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(LabelTotalItem)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(TextFieldTotalItem, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(LabelSubTotal)
+                            .addComponent(LabelAPagar))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(TextFieldAPagar)
+                            .addComponent(TextFieldSubTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(LabelPagamentos)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(TextFieldPagamentos, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(LabelTroco)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(TextFieldTroco)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(LabelCliente)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(TextFieldCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(LabelIdentificacaoCliente)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(TextFieldIdentificacaoCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 12, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(ButtonPagar, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(ButtonCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(LabelLogs, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void TextFieldDescricaoProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TextFieldDescricaoProdutoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TextFieldDescricaoProdutoActionPerformed
+
+    private void ButtonPagarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonPagarActionPerformed
+        // TODO add your handling code here:
+        if (vendaAtual.getItens().isEmpty()) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Carrinho vazio!");
+            return;
+        }
+        
+        // Recalcula totais
+        double totalVenda = 0.0;
+        for (grupo8.vendas.ItemVenda item : vendaAtual.getItens()) {
+            totalVenda += item.getSubtotal();
+        }
+        
+        // Quanto falta para atingir o preço do produto?
+        // Se já pagou a mais, o faltante é zero (para não passar negativo pro dialog)
+        double faltaPagar = totalVenda - totalPagoAcumulado;
+        if (faltaPagar < 0) faltaPagar = 0;
+
+        // CENÁRIO 1: O fluxo de pagamento continua (Abre Dialog)
+        // Se o botão ainda diz "PAGAR", abrimos a janela
+        if (ButtonPagar.getText().equals("PAGAR")) {
+            
+            JDialogPagamento dialog = new JDialogPagamento(this, true, faltaPagar);
+            dialog.setVisible(true);
+            
+            double pagoAgora = dialog.getValorPago(); // Agora retorna o valor CHEIO que digitou
+            
+            if (dialog.isPagamentoRealizado() && pagoAgora > 0) {
+                totalPagoAcumulado += pagoAgora;
+                
+                // --- ATUALIZAÇÃO DA TELA ---
+                // 1. Mostra TUDO que foi pago (ex: Venda 100, Pagou 150 -> Mostra 150)
+                TextFieldPagamentos.setText(String.format("%.2f", totalPagoAcumulado));
+                
+                // 2. Calcula saldo restante e troco
+                double restante = totalVenda - totalPagoAcumulado;
+                
+                if (restante > 0.01) {
+                    // Ainda deve
+                    TextFieldAPagar.setText(String.format("%.2f", restante));
+                    TextFieldTroco.setText("0,00");
+                } else {
+                    // Já pagou tudo (e talvez tenha troco)
+                    double trocoFinal = totalPagoAcumulado - totalVenda;
+                    
+                    TextFieldAPagar.setText("0,00");
+                    TextFieldTroco.setText(String.format("%.2f", trocoFinal)); // Mostra o troco aqui!
+                    
+                    // Muda o estado do botão para permitir salvar
+                    ButtonPagar.setText("FINALIZAR VENDA");
+                    javax.swing.JOptionPane.showMessageDialog(this, "Pagamento Completo! Troco: R$ " + String.format("%.2f", trocoFinal));
+                }
+            }
+        } 
+        
+        // CENÁRIO 2: Finalizar e Salvar (Texto do botão mudou)
+        else {
+            int op = javax.swing.JOptionPane.showConfirmDialog(this, "Deseja concluir e salvar a venda?", "Concluir", javax.swing.JOptionPane.YES_NO_OPTION);
+            
+            if (op == javax.swing.JOptionPane.YES_OPTION) {
+                // 1. Baixa Estoque
+                ArrayList<Produto> estoque = gerenciador.carregarLista();
+                for (grupo8.vendas.ItemVenda item : vendaAtual.getItens()) {
+                    for (Produto pEstoque : estoque) {
+                        if (pEstoque.getIdProduto() == item.getProduto().getIdProduto()) {
+                            int novoEstoque = pEstoque.getQntEstoque() - item.getQuantidade();
+                            pEstoque.setQntEstoque(String.valueOf(novoEstoque));
+                        }
+                    }
+                }
+                gerenciador.salvarLista(estoque);
+
+                // 2. Salva Venda
+                // vendaAtual.setNomeCliente(TextFieldCliente.getText()); // Se tiver implementado
+                
+                ArrayList<grupo8.vendas.Venda> listaVendas = gerenciador.carregarVendas();
+                listaVendas.add(vendaAtual);
+                gerenciador.salvarVendas(listaVendas);
+
+                javax.swing.JOptionPane.showMessageDialog(this, "Venda Salva com Sucesso!");
+                iniciarNovaVenda();
+            }
+        }
+    }//GEN-LAST:event_ButtonPagarActionPerformed
+
+    private void TextFieldTrocoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TextFieldTrocoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TextFieldTrocoActionPerformed
+
+    private void TextFieldClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TextFieldClienteActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TextFieldClienteActionPerformed
+
+    private void ButtonProcuraProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonProcuraProdutoActionPerformed
+        // TODO add your handling code here:
+        // Abre o Dialog de Busca
+        JDialogBuscaProduto dialog = new JDialogBuscaProduto(this, true);
+        dialog.setVisible(true);
+
+        Produto p = dialog.getProdutoSelecionado();
+        if (p != null) {
+            this.produtoAtual = p;
+            TextFieldDescricaoProduto.setText(p.getDescricao());
+            TextFieldQuantidade.setText("1");
+            TextFieldQuantidade.requestFocus();
+            LabelLogs.setText("Produto: " + p.getDescricao());
+        }
+    }//GEN-LAST:event_ButtonProcuraProdutoActionPerformed
+
+    private void TextFieldQuantidadeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TextFieldQuantidadeActionPerformed
+        // TODO add your handling code here:
+if (produtoAtual == null) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Selecione um produto antes de digitar a quantidade.");
+            return;
+        }
+
+        try {
+            // 2. Pega a quantidade digitada
+            int qtd = Integer.parseInt(TextFieldQuantidade.getText());
+            
+            if (qtd <= 0) {
+                javax.swing.JOptionPane.showMessageDialog(this, "A quantidade deve ser maior que zero.");
+                return;
+            }
+
+            // 3. Valida Estoque
+            if (qtd > produtoAtual.getQntEstoque()) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Estoque insuficiente! Disp: " + produtoAtual.getQntEstoque());
+                return;
+            }
+            
+            // 4. Atualiza o campo Total do Item (Visualmente)
+            double totalItem = produtoAtual.getPreco() * qtd;
+            TextFieldTotalItem.setText(String.format("%.2f", totalItem));
+
+            // 5. Cria o Item e adiciona na Venda
+            grupo8.vendas.ItemVenda item = new grupo8.vendas.ItemVenda(produtoAtual, qtd);
+            vendaAtual.adicionarItem(item);
+
+            // 6. Atualiza a tabela e os totais da venda
+            atualizarTabelaItens();
+            atualizarTotais();
+            
+            // 7. Limpa os campos para o próximo produto
+            limparCamposProduto();
+            LabelLogs.setText("Item adicionado! Total itens: " + vendaAtual.getItens().size());
+            
+            // Volta o foco para o botão de busca para agilizar o próximo item
+            ButtonProcuraProduto.requestFocus(); 
+
+        } catch (NumberFormatException e) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Quantidade inválida. Digite apenas números.");
+        }
+    }//GEN-LAST:event_TextFieldQuantidadeActionPerformed
 
     /**
      * @param args the command line arguments
@@ -78,5 +526,32 @@ public class JFrameTelaVenda extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton ButtonCancelar;
+    private javax.swing.JButton ButtonPagar;
+    private javax.swing.JButton ButtonProcuraProduto;
+    private javax.swing.JLabel LabelAPagar;
+    private javax.swing.JLabel LabelCliente;
+    private javax.swing.JLabel LabelIdentificacaoCliente;
+    private javax.swing.JLabel LabelLogs;
+    private javax.swing.JLabel LabelPagamentos;
+    private javax.swing.JLabel LabelProduto;
+    private javax.swing.JLabel LabelQuantidade;
+    private javax.swing.JLabel LabelSubTotal;
+    private javax.swing.JLabel LabelTitulo;
+    private javax.swing.JLabel LabelTotalItem;
+    private javax.swing.JLabel LabelTroco;
+    private javax.swing.JLabel LabelValorUnitario;
+    private javax.swing.JTable TableItemVenda;
+    private javax.swing.JTextField TextFieldAPagar;
+    private javax.swing.JTextField TextFieldCliente;
+    private javax.swing.JTextField TextFieldDescricaoProduto;
+    private javax.swing.JTextField TextFieldIdentificacaoCliente;
+    private javax.swing.JTextField TextFieldPagamentos;
+    private javax.swing.JTextField TextFieldQuantidade;
+    private javax.swing.JTextField TextFieldSubTotal;
+    private javax.swing.JTextField TextFieldTotalItem;
+    private javax.swing.JTextField TextFieldTroco;
+    private javax.swing.JTextField TextFieldValorTotal;
+    private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 }

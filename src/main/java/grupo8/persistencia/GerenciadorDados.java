@@ -45,4 +45,29 @@ public class GerenciadorDados {
             return new ArrayList<>();
         }
     }
+    
+    // --- PARTE DE VENDAS ---
+    private String caminhoVendas = "src/main/java/grupo8/dados/vendas.dat";
+
+    public void salvarVendas(ArrayList<grupo8.vendas.Venda> lista) {
+        File arquivo = new File(caminhoVendas);
+        if (arquivo.getParentFile() != null) arquivo.getParentFile().mkdirs();
+
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(arquivo))) {
+            oos.writeObject(lista);
+        } catch (IOException e) {
+            System.out.println("Erro salvar venda: " + e.getMessage());
+        }
+    }
+
+    public ArrayList<grupo8.vendas.Venda> carregarVendas() {
+        File arquivo = new File(caminhoVendas);
+        if (!arquivo.exists()) return new ArrayList<>();
+
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(arquivo))) {
+            return (ArrayList<grupo8.vendas.Venda>) ois.readObject();
+        } catch (Exception e) {
+            return new ArrayList<>();
+        }
+    }
 }
