@@ -1,5 +1,6 @@
 package grupo8.produto;
 
+import grupo8.interfaces.InterfaceProduto;
 import grupo8.pessoas.Pessoa;
 import java.io.File;
 import java.io.FileInputStream;
@@ -12,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public abstract class Produto implements Serializable {
+public abstract class Produto implements Serializable, InterfaceProduto {
     public static final long serialVersionUID = 1L;
     public static DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     public static int idProduto = 0;
@@ -336,5 +337,10 @@ public abstract class Produto implements Serializable {
             }
         }
         return produtos;
-    }
+    }    
+        
+        @Override
+        public void testarProduto() {
+        System.out.println("Testando produto...");
+        }    
 }
