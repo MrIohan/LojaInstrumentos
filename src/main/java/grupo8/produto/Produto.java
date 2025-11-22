@@ -64,13 +64,13 @@ public abstract class Produto implements Serializable {
 
     public final void setCodigo(String codigo) {
         if (codigo == null || codigo.trim().isEmpty()) {
-            throw new IllegalArgumentException("Por favor, digite um código.\n");
+            throw new IllegalArgumentException("Por favor, digite um codigo.\n");
         }
         
         codigo = codigo.trim();
         
         if (!codigo.matches("\\w+")){
-            throw new IllegalArgumentException("Por favor, digite um código contendo somente letras e/ou números.\n");
+            throw new IllegalArgumentException("Por favor, digite um codigo contendo somente letras e/ou números.\n");
         } 
         
         this.codigo = codigo;
@@ -87,7 +87,7 @@ public abstract class Produto implements Serializable {
 
         descricao = descricao.trim();
 
-        if (!descricao.matches("[\\p{L} ]+")){
+        if (!descricao.matches("[\\p{L}0-9 .,-]+")){
             throw new IllegalArgumentException("Descrição inválida. Por favor, digite somente letras.\n");
         } 
         

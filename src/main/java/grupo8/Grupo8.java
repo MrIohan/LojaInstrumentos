@@ -8,6 +8,7 @@ import grupo8.pessoas.PessoaJuridica;
 import grupo8.produto.Produto;
 import grupo8.produto.Acessorio;
 import grupo8.persistencia.GerenciadorDados;
+import grupo8.produto.instrumentos.Bateria;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
@@ -77,7 +78,27 @@ public class Grupo8 {
 //            }
 //        }
 
-
+System.out.println("=== TESTE BATTERIA ===");
+        
+        try {
+            Bateria bateria = new Bateria(
+                // 8 parâmetros específicos da Bateria
+                "3", "5", "Couro", "14.0", "22.0", "Crash", "Nylon", "Metal",
+                
+                // 4 parâmetros do Instrumento (ORDEM CORRETA!)
+                "Pearl", "123456", "Acustico", "Iniciante",
+                
+                // 11 parâmetros do Produto
+                "BAT001", "Bateria Acustica 5 Pecas", "Pearl", "15/05/2023",
+                "Brasil", "Madeira", "Preto", "1500.00", "15000", "10", "12"
+            );
+            
+            System.out.println(bateria);
+            System.out.println("✅ BATTERIA criada com SUCESSO!");
+            
+        } catch (IllegalArgumentException e) {
+            System.out.println("❌ Erro: " + e.getMessage());
+        }
 
     }
 }

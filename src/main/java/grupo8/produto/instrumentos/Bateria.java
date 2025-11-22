@@ -22,8 +22,9 @@ public final class Bateria extends Instrumento {
         
         
         
-        super(numSerie, tipoProducaoSom, nivelProfissional, codigo, descricao, fabricante, marca,
-              dataFabricacao, paisFabricacao, material, cor, preco, peso, estoque, prazoGarantia);
+        super(fabricante, numSerie, tipoProducaoSom, nivelProfissional, 
+              codigo, descricao, marca, dataFabricacao, paisFabricacao, 
+              material, cor, preco, peso, estoque, prazoGarantia);
         
         setNumTons(numTons);
         setNumPecas(numPecas);
