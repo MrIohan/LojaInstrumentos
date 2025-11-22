@@ -21,14 +21,17 @@ public final class PessoaJuridica extends Pessoa {
     private PessoaFisica[] sociosPF;
     private PessoaJuridica[] sociosPJ;
     
-    public PessoaJuridica(String cnpj, String inscricao, String razao, String nome, String dtAbertura, String atividade, String endereco, String telefone1, String telefone2, String email) {
+    public PessoaJuridica(String cnpj, String inscricao, String razaoSocial, String nomeFantasia, String dtAbertura, 
+                          String atividade, PessoaFisica[] sociosPF, 
+                          String endereco, String telefone1, String telefone2, String email) {
         super(endereco, telefone1, telefone2, email);
         setCnpj(cnpj);
         setInscricao(inscricao);
-        setRazaoSocial(razao);
-        setNomeFantasia(nome);
+        setRazaoSocial(razaoSocial);
+        setNomeFantasia(nomeFantasia);
         setDtAbertura(dtAbertura);
         setAtividade(atividade);
+        setSociosPF(sociosPF);
         id = ++contador;
     }
     
@@ -63,25 +66,25 @@ public final class PessoaJuridica extends Pessoa {
         return razaoSocial;
     }
 
-    public void setRazaoSocial(String razao) {
-        if(razao == null || razao.trim().isEmpty()) {
+    public void setRazaoSocial(String razaoSocial) {
+        if(razaoSocial == null || razaoSocial.trim().isEmpty()) {
             throw new IllegalArgumentException("Por favor, digite a razão social (nome empresarial).");
         } 
         
-        if(!razao.matches("[\\p{L}\\d\\.& ]{5,}")) {
+        if(!razaoSocial.matches("[\\p{L}\\d\\.& ]{5,}")) {
             throw new IllegalArgumentException("Por favor, digite a razão social completa.");
         }
-        razaoSocial = razao;
+        this.razaoSocial = razaoSocial;
     }
 
     public String getNomeFantasia() {
         return nomeFantasia;
     }
 
-    public void setNomeFantasia(String nome) {
-        nome = (nome == null ? "" : nome.trim());
+    public void setNomeFantasia(String nomeFantasia) {
+        nomeFantasia = (nomeFantasia == null ? "" : nomeFantasia.trim());
         
-        nomeFantasia = nome;
+        this.nomeFantasia = nomeFantasia;
     }
 
     public LocalDate getDtAbertura() {
@@ -118,7 +121,7 @@ public final class PessoaJuridica extends Pessoa {
             throw new IllegalArgumentException("Por favor, digite, pelo menos, a atividade principal da empresa.");
         }
         if(!atividade.matches("[\\p{L} ]{5,}")) {
-            throw new IllegalArgumentException("É esperado somente letras no campo Atividade, com, no mínimo, 5 caracteres.");
+            throw new IllegalArgumentException("Esperam-se somente letras no campo Atividade.");
         }
         this.atividade = atividade;
     }
@@ -234,25 +237,14 @@ public final class PessoaJuridica extends Pessoa {
                 sb.append("\nSÓCIO ").append(i).append("\n")
                   .append(toString()).append("\n");
                 
-//                sb.append("    Razão Social: ").append(socio.getRazaoSocial()).append("\n");
-//                sb.append("    Nome Fantasia: ").append(socio.getNomeFantasia()).append("\n");
-//                sb.append("    CNPJ: ").append(socio.getCnpj()).append("\n");
-//                sb.append("    Telefone: ").append(socio.getTelefone1()).append("\n");
-//                sb.append("    Email: ").append(socio.getEmail()).append("\n\n");
-//                sb.append("    Representante(s): ").append("\n");
-                
-                if(socio.getSociosPF() != null && socio.getSociosPF().length > 0) {
-                    int j = 0;
-                    for(PessoaFisica socioPF : socio.getSociosPF()) {
-                        j++;
-                        sb.append("\n    ").append("Sócio ").append(j).append(" - PF (ID: ").append(socioPF.getId()).append(")\n\n");
-                        sb.append("         Nome: ").append(socioPF.getNome()).append("\n");
-                        sb.append("         CPF: ").append(socioPF.getCPF()).append("\n");
-                        sb.append("         Telefone: ").append(socioPF.getTelefone1()).append("\n");
-                        sb.append("         Email: ").append(socioPF.getEmail()).append("\n");
-                    }
-                } else {
-                    sb.append("\n    ATENÇÃO: Não há sócios vinculados a esta empresa.\n");
+                int j = 0;
+                for(PessoaFisica socioPF : socio.getSociosPF()) {
+                    j++;
+                    sb.append("\n    ").append("Sócio ").append(j).append(" - PF (ID: ").append(socioPF.getId()).append(")\n\n");
+                    sb.append("         Nome: ").append(socioPF.getNome()).append("\n");
+                    sb.append("         CPF: ").append(socioPF.getCPF()).append("\n");
+                    sb.append("         Telefone: ").append(socioPF.getTelefone1()).append("\n");
+                    sb.append("         Email: ").append(socioPF.getEmail()).append("\n");
                 }
             }
         }

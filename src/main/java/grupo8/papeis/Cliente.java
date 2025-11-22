@@ -25,7 +25,7 @@ public final class Cliente {
     private final int codigo;
     private Pessoa dadosPessoa;
     private final LocalDate dtCadastro;
-    private int pontuacaoFidelidade; //se atentar ao controle de prazos
+    private double bonusProxCompra;
     private LocalDate dtUltimaCompra;
     private double vlrTotalComprado;
     
@@ -56,18 +56,22 @@ public final class Cliente {
         return dtCadastro;
     }
 
-    public int getPontuacaoFidelidade() {
-        return pontuacaoFidelidade;
+    public double getBonusProxCompra() {
+        if(dtUltimaCompra.plusDays(6).isBefore(LocalDate.now())){
+            bonusProxCompra = 0;
+        }
+        return bonusProxCompra;
     }
 
-    public void setPontuacaoFidelidade(int pontos) {
-        pontuacaoFidelidade += pontos;
+    public void setBonusProxCompra(double bonusProxCompra) {
+        this.bonusProxCompra = bonusProxCompra;
     }
 
     public LocalDate getDtUltimaCompra() {
         return dtUltimaCompra;
     }
 
+    // referência deste atributo deve ser importada de Venda
     public void setDtUltimaCompra(LocalDate dtUltimaCompra) {
         this.dtUltimaCompra = dtUltimaCompra;
     }
@@ -76,6 +80,7 @@ public final class Cliente {
         return vlrTotalComprado;
     }
 
+    // referência deste atributo deve ser importada de Venda
     public void setVlrTotalComprado(double vlrTotalComprado) {
         this.vlrTotalComprado = vlrTotalComprado;
     }
@@ -90,7 +95,7 @@ public final class Cliente {
 
         sb.append(dadosPessoa.toString()).append("\n");
 
-        sb.append("\n    Pontos de Fidelidade: ").append(pontuacaoFidelidade)
+        sb.append("\n    Bônus: ").append(bonusProxCompra)
           .append("\n    Data da última compra: ").append((dtUltimaCompra == null ? "Não há informações a exibir" : dtUltimaCompra.format(formato)))
           .append("\n    Valor total comprado: ").append((vlrTotalComprado == 0 ? "Não há informações a exibir" : vlrTotalComprado));
         
