@@ -33,7 +33,7 @@ public abstract class Produto implements Serializable {
     
     public Produto(String codigo, String descricao, String marca, 
                    String dataFabricacao, String paisFabricacao, String material, 
-                   String cor, String preco, String peso, String estoque, String garantia) {
+                   String cor, String preco, String peso, String qntEstoque, String prazoGarantia) {
                         
         setCodigo(codigo);
         setDescricao(descricao);
@@ -44,8 +44,8 @@ public abstract class Produto implements Serializable {
         setCor(cor);
         setPreco(preco);
         setPeso(peso);
-        setQntEstoque(estoque);
-        setPrazoGarantia(garantia);
+        setQntEstoque(qntEstoque);
+        setPrazoGarantia(prazoGarantia);
         idProduto++;
     }
     

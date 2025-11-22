@@ -23,10 +23,10 @@
 //                  String numSerie, String tipoSaida, String nivelProfissional,
 //                  String codigo, String descricao, String fabricante, String marca, 
 //                  String dataFabricacao, String paisFabricacao, String material, 
-//                  String cor, double preco, double peso, int estoque, int garantia) {
+//                  String cor, double preco, double peso, int qntEstoque, int prazoGarantia) {
 //        
 //        super(numSerie, tipoSaida, nivelProfissional, codigo, descricao, fabricante, marca,
-//              dataFabricacao, paisFabricacao, material, cor, preco, peso, estoque, garantia);
+//              dataFabricacao, paisFabricacao, material, cor, preco, peso, qntEstoque, prazoGarantia);
 //        this.id = getID(); // Usa o ID herdado do Instrumento
 //        
 //        setNumTons(numTons);
@@ -164,8 +164,8 @@
 //            "\nCor: " + getCor() +
 //            "\nPreço: R$ " + String.format("%.2f", getPreco()) +
 //            "\nPeso: " + getPeso() + " kg" +
-//            "\nEstoque: " + getEstoque() +
-//            "\nGarantia: " + getGarantia() + " meses" +
+//            "\nEstoque: " + getQntEstoque() +
+//            "\nGarantia: " + getPrazoGarantia() + " meses" +
 //            "\n\n---------------------------------------------------------------";
 //    }
 //    
