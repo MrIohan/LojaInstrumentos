@@ -94,10 +94,10 @@ System.out.println("=== TESTE BATTERIA ===");
             );
             
             System.out.println(bateria);
-            System.out.println("✅ BATTERIA criada com SUCESSO!");
+            System.out.println("Bateria criada com sucesso!");
             
         } catch (IllegalArgumentException e) {
-            System.out.println("❌ Erro: " + e.getMessage());
+            System.out.println("Erro: " + e.getMessage());
         }
 
     }
