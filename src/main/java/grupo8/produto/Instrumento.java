@@ -1,6 +1,20 @@
 package grupo8.produto;
 
-public abstract class Instrumento extends Produto {
+import grupo8.interfaces.InferfaceInstrumento;
+import grupo8.interfaces.InterfaceProduto;
+import grupo8.pessoas.Pessoa;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Pattern;
+
+public abstract class Instrumento extends Produto implements InferfaceInstrumento {
     
     public static int idInstrumento = 0;
 
@@ -103,5 +117,10 @@ public abstract class Instrumento extends Produto {
             "\nNúmero de Série: " + numSerie +
             "\nTipo de Produção de Som: " + tipoProducaoSom +
             "\nNível Profissional: " + nivelProfissional;
+    }
+        
+    public void afinar() {
+        System.out.println("Afinando instrumento (geral)...");
+
     }
 }

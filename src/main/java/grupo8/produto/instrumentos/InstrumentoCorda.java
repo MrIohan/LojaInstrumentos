@@ -234,4 +234,10 @@ public final class InstrumentoCorda extends Instrumento {
              out.writeObject(this);
         }
     }
+   
+    @Override
+    public void afinar() {
+        System.out.println("Afinando as cordas...");
+    }
+   
 }

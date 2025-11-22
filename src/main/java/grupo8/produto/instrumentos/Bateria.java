@@ -225,4 +225,11 @@ public final class Bateria extends Instrumento {
              out.writeObject(this);
         }
     }
+    
+    @Override
+    public void afinar() {
+        System.out.println("Afinando bateria...");
+    }
+        
+        
 }

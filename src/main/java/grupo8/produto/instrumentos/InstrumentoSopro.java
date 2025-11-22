@@ -134,4 +134,10 @@ public final class InstrumentoSopro extends Instrumento {
              out.writeObject(this);
         }
     }
+    
+    @Override
+        public void afinar(){
+            System.out.println("Ajustando a afinação...");
+        }
+    
 }
