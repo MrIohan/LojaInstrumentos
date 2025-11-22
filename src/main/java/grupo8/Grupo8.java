@@ -78,17 +78,16 @@ public class Grupo8 {
 //            }
 //        }
 
-System.out.println("=== TESTE BATTERIA ===");
+System.out.println("teste bateria <3");
         
         try {
             Bateria bateria = new Bateria(
-                // 8 parâmetros específicos da Bateria
                 "3", "5", "Couro", "14.0", "22.0", "Crash", "Nylon", "Metal",
                 
-                // 4 parâmetros do Instrumento (ORDEM CORRETA!)
+                
                 "Pearl", "123456", "Acustico", "Iniciante",
                 
-                // 11 parâmetros do Produto
+                
                 "BAT001", "Bateria Acustica 5 Pecas", "Pearl", "15/05/2023",
                 "Brasil", "Madeira", "Preto", "1500.00", "15000", "10", "12"
             );
