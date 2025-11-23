@@ -21,8 +21,6 @@ public class JDialogPagamento extends javax.swing.JDialog {
     public JDialogPagamento(java.awt.Frame parent, boolean modal, double valorTotal) {
     super(parent, modal);
         initComponents();
-        
-        // --- CORREÇÃO AQUI ---
         this.valorFaltante = valorTotal; // Agora sim pegamos o valor que veio da tela de venda!
         // ---------------------
         

@@ -68,7 +68,11 @@
                                       <Component id="ButtonProcuraProduto" min="-2" pref="35" max="-2" attributes="0"/>
                                   </Group>
                                   <Component id="TextFieldTotalItem" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="TextFieldCliente" alignment="0" max="32767" attributes="0"/>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="TextFieldCliente" max="32767" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="ButtonBuscarCliente" min="-2" pref="35" max="-2" attributes="0"/>
+                                  </Group>
                                   <Group type="102" alignment="0" attributes="0">
                                       <Group type="103" groupAlignment="0" attributes="0">
                                           <Component id="LabelProduto" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -165,7 +169,10 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="LabelCliente" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="TextFieldCliente" min="-2" pref="35" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="TextFieldCliente" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
+                          <Component id="ButtonBuscarCliente" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
+                      </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="LabelIdentificacaoCliente" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
@@ -358,6 +365,14 @@
         <Property name="horizontalAlignment" type="int" value="0"/>
         <Property name="text" type="java.lang.String" value="LOJA DE INSTUMENTOS MUSICAIS"/>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="ButtonBuscarCliente">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="\ud83d\udd0d" containsInvalidXMLChars="true"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ButtonBuscarClienteActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

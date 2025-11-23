@@ -34,7 +34,9 @@ public final class PessoaFisica extends Pessoa {
     public final void setNome(String nome) {
         if (nome == null || nome.trim().isEmpty()) {
             throw new IllegalArgumentException("Por favor, digite um nome!");
-        } else if(!nome.matches("[\\p{L} ]{5,}")) {
+        }
+        
+        if(!nome.matches("[\\p{L} ]{5,}")) {
             throw new IllegalArgumentException("Por favor, digite, ao menos, o nome e último sobrenome da pessoa.\n");
         }
         this.nome = nome;        
@@ -45,7 +47,7 @@ public final class PessoaFisica extends Pessoa {
     }
     
     public void setCPF(String cpf) {
-        validaCPF(cpf);
+        validarCPF(cpf);
         this.cpf = cpf;
     }
 
@@ -79,7 +81,7 @@ public final class PessoaFisica extends Pessoa {
         return Period.between(dtNasc, hoje).getYears();
     }
     
-    public void validaCPF(String cpf) {
+    public void validarCPF(String cpf) {
         if(cpf == null || cpf.trim().isEmpty()) {
             throw new IllegalArgumentException("Por favor, digite o CPF.");
         } 

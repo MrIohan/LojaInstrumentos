@@ -1,10 +1,20 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package grupo8.produto;
 
-public abstract class Instrumento extends Produto {
+import grupo8.interfaces.InferfaceInstrumento;
+import grupo8.interfaces.InterfaceProduto;
+import grupo8.pessoas.Pessoa;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Pattern;
+
+public abstract class Instrumento extends Produto implements InferfaceInstrumento {
     
     public static int idInstrumento = 0;
 
@@ -19,6 +29,7 @@ public abstract class Instrumento extends Produto {
         
         super(codigo, descricao, marca, dataFabricacao, paisFabricacao, 
               material, cor, preco, peso, qntEstoque, prazoGarantia);
+        
         setFabricante(fabricante);
         setNumSerie(numSerie);
         setTipoProducaoSom(tipoProducaoSom);
@@ -73,7 +84,7 @@ public abstract class Instrumento extends Produto {
 
         tipoProducaoSom = tipoProducaoSom.trim();
 
-        if (!fabricante.matches("[\\p{L} ]+")){
+        if (!tipoProducaoSom.matches("[\\p{L} ]+")){
             throw new IllegalArgumentException("Tipo de produção de som inválido. Por favor, digite somente letras.\n");
         } 
         
@@ -91,7 +102,7 @@ public abstract class Instrumento extends Produto {
 
         nivelProfissional = nivelProfissional.trim();
 
-        if (!fabricante.matches("[\\p{L} ]+")){
+        if (!nivelProfissional.matches("[\\p{L} ]+")){
             throw new IllegalArgumentException("Nível profissional inválido. Por favor, digite somente letras.\n");
         } 
         
@@ -106,5 +117,10 @@ public abstract class Instrumento extends Produto {
             "\nNúmero de Série: " + numSerie +
             "\nTipo de Produção de Som: " + tipoProducaoSom +
             "\nNível Profissional: " + nivelProfissional;
+    }
+        
+    public void afinar() {
+        System.out.println("Afinando instrumento (geral)...");
+
     }
 }

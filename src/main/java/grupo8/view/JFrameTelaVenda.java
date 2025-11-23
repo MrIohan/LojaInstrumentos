@@ -110,6 +110,7 @@ public class JFrameTelaVenda extends javax.swing.JFrame {
         ButtonCancelar = new javax.swing.JButton();
         LabelLogs = new javax.swing.JLabel();
         LabelTitulo = new javax.swing.JLabel();
+        ButtonBuscarCliente = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -198,6 +199,13 @@ public class JFrameTelaVenda extends javax.swing.JFrame {
         LabelTitulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         LabelTitulo.setText("LOJA DE INSTUMENTOS MUSICAIS");
 
+        ButtonBuscarCliente.setText("🔍");
+        ButtonBuscarCliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ButtonBuscarClienteActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -237,7 +245,10 @@ public class JFrameTelaVenda extends javax.swing.JFrame {
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(ButtonProcuraProduto, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addComponent(TextFieldTotalItem, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(TextFieldCliente, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                        .addComponent(TextFieldCliente)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(ButtonBuscarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(LabelProduto)
@@ -311,7 +322,9 @@ public class JFrameTelaVenda extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(LabelCliente)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(TextFieldCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(TextFieldCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(ButtonBuscarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(LabelIdentificacaoCliente)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -341,81 +354,90 @@ public class JFrameTelaVenda extends javax.swing.JFrame {
             javax.swing.JOptionPane.showMessageDialog(this, "Carrinho vazio!");
             return;
         }
-        
+
         // Recalcula totais
         double totalVenda = 0.0;
         for (grupo8.vendas.ItemVenda item : vendaAtual.getItens()) {
             totalVenda += item.getSubtotal();
         }
-        
+
         // Quanto falta para atingir o preço do produto?
-        // Se já pagou a mais, o faltante é zero (para não passar negativo pro dialog)
         double faltaPagar = totalVenda - totalPagoAcumulado;
         if (faltaPagar < 0) faltaPagar = 0;
 
         // CENÁRIO 1: O fluxo de pagamento continua (Abre Dialog)
-        // Se o botão ainda diz "PAGAR", abrimos a janela
         if (ButtonPagar.getText().equals("PAGAR")) {
-            
+
             JDialogPagamento dialog = new JDialogPagamento(this, true, faltaPagar);
+            dialog.setLocationRelativeTo(this);
             dialog.setVisible(true);
-            
-            double pagoAgora = dialog.getValorPago(); // Agora retorna o valor CHEIO que digitou
-            
+
+            double pagoAgora = dialog.getValorPago(); 
+
             if (dialog.isPagamentoRealizado() && pagoAgora > 0) {
                 totalPagoAcumulado += pagoAgora;
-                
+
                 // --- ATUALIZAÇÃO DA TELA ---
-                // 1. Mostra TUDO que foi pago (ex: Venda 100, Pagou 150 -> Mostra 150)
                 TextFieldPagamentos.setText(String.format("%.2f", totalPagoAcumulado));
-                
-                // 2. Calcula saldo restante e troco
+
                 double restante = totalVenda - totalPagoAcumulado;
-                
+
                 if (restante > 0.01) {
-                    // Ainda deve
                     TextFieldAPagar.setText(String.format("%.2f", restante));
                     TextFieldTroco.setText("0,00");
                 } else {
-                    // Já pagou tudo (e talvez tenha troco)
                     double trocoFinal = totalPagoAcumulado - totalVenda;
-                    
                     TextFieldAPagar.setText("0,00");
-                    TextFieldTroco.setText(String.format("%.2f", trocoFinal)); // Mostra o troco aqui!
-                    
-                    // Muda o estado do botão para permitir salvar
+                    TextFieldTroco.setText(String.format("%.2f", trocoFinal)); 
+
                     ButtonPagar.setText("FINALIZAR VENDA");
                     javax.swing.JOptionPane.showMessageDialog(this, "Pagamento Completo! Troco: R$ " + String.format("%.2f", trocoFinal));
                 }
             }
         } 
-        
+
         // CENÁRIO 2: Finalizar e Salvar (Texto do botão mudou)
         else {
             int op = javax.swing.JOptionPane.showConfirmDialog(this, "Deseja concluir e salvar a venda?", "Concluir", javax.swing.JOptionPane.YES_NO_OPTION);
-            
+
             if (op == javax.swing.JOptionPane.YES_OPTION) {
-                // 1. Baixa Estoque
-                ArrayList<Produto> estoque = gerenciador.carregarLista();
-                for (grupo8.vendas.ItemVenda item : vendaAtual.getItens()) {
-                    for (Produto pEstoque : estoque) {
-                        if (pEstoque.getIdProduto() == item.getProduto().getIdProduto()) {
-                            int novoEstoque = pEstoque.getQntEstoque() - item.getQuantidade();
-                            pEstoque.setQntEstoque(String.valueOf(novoEstoque));
+                // --- INÍCIO DA PROTEÇÃO CONTRA ERROS ---
+                try {
+                    // 1. Atualiza Nome do Cliente antes de salvar
+                    vendaAtual.setNomeCliente(TextFieldCliente.getText());
+
+                    // 2. Baixa Estoque
+                    ArrayList<Produto> estoque = gerenciador.carregarLista();
+                    for (grupo8.vendas.ItemVenda item : vendaAtual.getItens()) {
+                        for (Produto pEstoque : estoque) {
+                            if (pEstoque.getIdProduto() == item.getProduto().getIdProduto()) {
+                                int novoEstoque = pEstoque.getQntEstoque() - item.getQuantidade();
+                                
+                                // TRUQUE: Se o estoque for zerar, a validação do Produto pode chiar (se for <= 0).
+                                // Vamos garantir que não quebre aqui se sua regra permitir estoque 0.
+                                // Se a classe Produto lançar erro para 0, você verá o aviso agora.
+                                pEstoque.setQntEstoque(String.valueOf(novoEstoque));
+                            }
                         }
                     }
+                    gerenciador.salvarLista(estoque);
+
+                    // 3. Salva Venda
+                    ArrayList<grupo8.vendas.Venda> listaVendas = gerenciador.carregarVendas();
+                    listaVendas.add(vendaAtual);
+                    gerenciador.salvarVendas(listaVendas);
+
+                    javax.swing.JOptionPane.showMessageDialog(this, "Venda Salva com Sucesso!");
+                    iniciarNovaVenda();
+                    
+                } catch (Exception e) {
+                    // --- AQUI ESTÁ A CORREÇÃO ---
+                    // Agora, se der erro de validação (ex: estoque negativo/zero), vai aparecer aqui!
+                    javax.swing.JOptionPane.showMessageDialog(this, 
+                        "Erro ao finalizar venda:\n" + e.getMessage(), 
+                        "Erro", 
+                        javax.swing.JOptionPane.ERROR_MESSAGE);
                 }
-                gerenciador.salvarLista(estoque);
-
-                // 2. Salva Venda
-                // vendaAtual.setNomeCliente(TextFieldCliente.getText()); // Se tiver implementado
-                
-                ArrayList<grupo8.vendas.Venda> listaVendas = gerenciador.carregarVendas();
-                listaVendas.add(vendaAtual);
-                gerenciador.salvarVendas(listaVendas);
-
-                javax.swing.JOptionPane.showMessageDialog(this, "Venda Salva com Sucesso!");
-                iniciarNovaVenda();
             }
         }
     }//GEN-LAST:event_ButtonPagarActionPerformed
@@ -432,6 +454,7 @@ public class JFrameTelaVenda extends javax.swing.JFrame {
         // TODO add your handling code here:
         // Abre o Dialog de Busca
         JDialogBuscaProduto dialog = new JDialogBuscaProduto(this, true);
+        dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
 
         Produto p = dialog.getProdutoSelecionado();
@@ -490,6 +513,35 @@ if (produtoAtual == null) {
         }
     }//GEN-LAST:event_TextFieldQuantidadeActionPerformed
 
+    private void ButtonBuscarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonBuscarClienteActionPerformed
+        // TODO add your handling code here:
+        JDialogBuscaPessoa dialog = new JDialogBuscaPessoa(this, true);
+        dialog.setLocationRelativeTo(this);
+        dialog.setVisible(true);
+        
+        grupo8.pessoas.Pessoa p = dialog.getPessoaSelecionada();
+        
+        if (p != null) {
+            String nome = "";
+            String doc = "";
+            
+            if (p instanceof grupo8.pessoas.PessoaFisica) {
+                nome = ((grupo8.pessoas.PessoaFisica) p).getNome();
+                doc = ((grupo8.pessoas.PessoaFisica) p).getCPF();
+            } else {
+                nome = ((grupo8.pessoas.PessoaJuridica) p).getNomeFantasia();
+                doc = ((grupo8.pessoas.PessoaJuridica) p).getCnpj();
+            }
+            
+            // Preenche na tela de venda
+            TextFieldCliente.setText(nome);
+            TextFieldIdentificacaoCliente.setText(doc);
+            
+            // Se tiver um método setNomeCliente na venda atual, atualize:
+            vendaAtual.setNomeCliente(nome);
+        }
+    }//GEN-LAST:event_ButtonBuscarClienteActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -526,6 +578,7 @@ if (produtoAtual == null) {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton ButtonBuscarCliente;
     private javax.swing.JButton ButtonCancelar;
     private javax.swing.JButton ButtonPagar;
     private javax.swing.JButton ButtonProcuraProduto;

@@ -8,6 +8,7 @@ import grupo8.pessoas.PessoaJuridica;
 import grupo8.produto.Produto;
 import grupo8.produto.Acessorio;
 import grupo8.persistencia.GerenciadorDados;
+import grupo8.produto.instrumentos.Bateria;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
@@ -28,9 +29,9 @@ public class Grupo8 {
         
 //        var sc = new Scanner(System.in);
 //        
-//        var pf1 = new PessoaFisica("Phellyppe Gomes", Pessoa.geraCpf(), "22/02/1999", "Rua Rio Xingu, nº 16, Grande Terceiro, Cuiabá/MT", "65996816470", null , "phellyppe.matos@estudante.ifmt.edu.br");
-//        var pf2 = new PessoaFisica("Pedro Escobar", Pessoa.geraCpf(), "12/03/1989", "Rua das Desgraças, 0, Inferno, Cracolândia/SP", "11930007000", null, "pedro157@vemprocrime.com.br");
-//        var pf3 = new PessoaFisica("Jacinto Leite", Pessoa.geraCpf(), "05/09/2004", "Rua Passivas Reinam, 24, Quero-Quero Pica-pau, Ratanabá", "69969696969", "", "mcleitinho@filhosdocatra.com.br");
+//        var pf1 = new PessoaFisica("Phellyppe Gomes", Pessoa.gerarCpf(), "22/02/1999", "Rua Rio Xingu, nº 16, Grande Terceiro, Cuiabá/MT", "65996816470", null , "phellyppe.matos@estudante.ifmt.edu.br");
+//        var pf2 = new PessoaFisica("Pedro Escobar", Pessoa.gerarCpf(), "12/03/1989", "Rua das Desgraças, 0, Inferno, Cracolândia/SP", "11930007000", null, "pedro157@vemprocrime.com.br");
+//        var pf3 = new PessoaFisica("Jacinto Leite", Pessoa.gerarCpf(), "05/09/2004", "Rua Passivas Reinam, 24, Quero-Quero Pica-pau, Ratanabá", "69969696969", "", "mcleitinho@filhosdocatra.com.br");
 //        
 //        PessoaFisica[] sociosPF1 = {pf1};
 //        PessoaFisica[] sociosPF2 = {pf2, pf1, pf3};
@@ -76,5 +77,27 @@ public class Grupo8 {
 //                }
 //            }
 //        }
+
+System.out.println("teste bateria <3");
+        
+        try {
+            Bateria bateria = new Bateria(
+                "3", "5", "Couro", "14.0", "22.0", "Crash", "Nylon", "Metal",
+                
+                
+                "Pearl", "123456", "Acustico", "Iniciante",
+                
+                
+                "BAT001", "Bateria Acustica 5 Pecas", "Pearl", "15/05/2023",
+                "Brasil", "Madeira", "Preto", "1500.00", "15000", "10", "12"
+            );
+            
+            System.out.println(bateria);
+            System.out.println("Bateria criada com sucesso!");
+            
+        } catch (IllegalArgumentException e) {
+            System.out.println("Erro: " + e.getMessage());
+        }
+
     }
 }

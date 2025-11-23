@@ -33,6 +33,8 @@ public class JFrameMenu extends javax.swing.JFrame {
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenu4 = new javax.swing.JMenu();
+        jMenuItem3 = new javax.swing.JMenuItem();
+        jMenuItem4 = new javax.swing.JMenuItem();
         jMenu1 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -63,6 +65,23 @@ public class JFrameMenu extends javax.swing.JFrame {
         jMenuBar1.add(jMenu3);
 
         jMenu4.setText("Vendas");
+
+        jMenuItem3.setText("Vendas");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
+        jMenu4.add(jMenuItem3);
+
+        jMenuItem4.setText("Historioco de Vendas");
+        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem4ActionPerformed(evt);
+            }
+        });
+        jMenu4.add(jMenuItem4);
+
         jMenuBar1.add(jMenu4);
         jMenuBar1.add(jMenu1);
 
@@ -87,6 +106,14 @@ public class JFrameMenu extends javax.swing.JFrame {
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         // TODO add your handling code here:
+        
+        JFrameGestaoPessoas telaPessoas = new JFrameGestaoPessoas();
+
+        telaPessoas.setLocationRelativeTo(this);
+
+        telaPessoas.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+
+        telaPessoas.setVisible(true);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
@@ -95,7 +122,7 @@ public class JFrameMenu extends javax.swing.JFrame {
         JFrameGestaoProdutos telaProdutos = new JFrameGestaoProdutos();
 
         // 2. (Opcional) Faz a tela aparecer no centro do monitor, não no canto
-        telaProdutos.setLocationRelativeTo(null);
+        telaProdutos.setLocationRelativeTo(this);
 
         // 3. (Importante) Define que ao fechar essa tela, SÓ ELA fecha (não o sistema todo)
         // Se deixar o padrão (EXIT_ON_CLOSE), ao fechar produtos, o Menu fecha junto.
@@ -104,6 +131,28 @@ public class JFrameMenu extends javax.swing.JFrame {
         // 4. Mostra a tela
         telaProdutos.setVisible(true);
     }//GEN-LAST:event_jMenuItem2ActionPerformed
+
+    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
+        // TODO add your handling code here:
+        JFrameHistoricoVendas telaVenda = new JFrameHistoricoVendas();
+
+        telaVenda.setLocationRelativeTo(this);
+
+        telaVenda.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+
+        telaVenda.setVisible(true);
+    }//GEN-LAST:event_jMenuItem4ActionPerformed
+
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+        // TODO add your handling code here:
+        JFrameTelaVenda telaVenda = new JFrameTelaVenda();
+
+        telaVenda.setLocationRelativeTo(this);
+
+        telaVenda.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+
+        telaVenda.setVisible(true);
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -148,5 +197,7 @@ public class JFrameMenu extends javax.swing.JFrame {
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JMenuItem jMenuItem4;
     // End of variables declaration//GEN-END:variables
 }

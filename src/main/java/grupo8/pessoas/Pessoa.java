@@ -36,7 +36,7 @@ public abstract class Pessoa implements Serializable {
     public final void setEndereco(String endereco) {
         if(endereco == null || endereco.trim().isEmpty()) {
             throw new IllegalArgumentException("Por favor, digite um endereço.");
-        } else if(endereco.length() < 30) {
+        } else if(endereco.length() < 10) {
             throw new IllegalArgumentException("Por favor, digite um endereço completo (rua, número, bairro, cidade, UF, CEP).\n");
         } else {
             this.endereco = endereco;
@@ -48,7 +48,7 @@ public abstract class Pessoa implements Serializable {
     }
 
     public final void setTelefone1(String telefone) {
-        validaTelefone(telefone);
+        validarTelefone(telefone);
         telefone1 = telefone;
     }
 
@@ -58,7 +58,7 @@ public abstract class Pessoa implements Serializable {
 
     public final void setTelefone2(String telefone) {
         if(telefone != null && !telefone.trim().isEmpty()) {
-            validaTelefone(telefone);
+            validarTelefone(telefone);
             telefone2 = telefone;
         } else {
             telefone2 = "";
@@ -72,14 +72,16 @@ public abstract class Pessoa implements Serializable {
     public final void setEmail(String email) {
         if(email == null || email.trim().isEmpty()) {
             throw new IllegalArgumentException("Por favor, digite um email.\n");
-        } else if(!email.trim().matches("^[a-zA-Z0-9\\._+-]+@[a-zA-Z0-9-]{2,}\\.([a-zA-Z0-9]{2,}\\.)*[a-zA-Z]{2,}$")) {
+        } 
+        
+        if(!email.trim().matches("^[a-zA-Z0-9\\._+-]+@[a-zA-Z0-9-]{2,}\\.([a-zA-Z0-9]{2,}\\.)*[a-zA-Z]{2,}$")) {
             throw new IllegalArgumentException("Por favor, digite um email válido.\n");
-        } else {
-            this.email = email.trim();
-        }
+        } 
+
+        this.email = email.trim();
     }
     
-    public static String geraCpf() {
+    public static String gerarCpf() {
         var random = new Random();
         String cpf = "";
         
@@ -112,10 +114,12 @@ public abstract class Pessoa implements Serializable {
         return cpf;
     }
     
-    public void validaTelefone(String telefone) {
+    public void validarTelefone(String telefone) {
         if(telefone == null || telefone.trim().isEmpty()) {
             throw new IllegalArgumentException("Por favor, digite um número de telefone");
-        } else if(!telefone.matches("\\d{10,11}")) {
+        } 
+        
+        if(!telefone.matches("\\d{10,11}")) {
             throw new IllegalArgumentException("Por favor, digite um número de telefone com DDD, sem caracteres.\n");
         }
     }

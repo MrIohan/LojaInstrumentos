@@ -13,8 +13,47 @@ public class JFrameGestaoPessoas extends javax.swing.JFrame {
     /**
      * Creates new form JFrameGestaoPessoas
      */
+    
+    private grupo8.persistencia.GerenciadorDados gerenciador = new grupo8.persistencia.GerenciadorDados();
+    private java.util.ArrayList<grupo8.pessoas.Pessoa> listaPessoas;
+    
+    
     public JFrameGestaoPessoas() {
         initComponents();
+        atualizarTabela();
+    }
+    
+    private void atualizarTabela() {
+        listaPessoas = gerenciador.carregarPessoas();
+        javax.swing.table.DefaultTableModel modelo = (javax.swing.table.DefaultTableModel) jTable1.getModel();
+        modelo.setRowCount(0);
+
+        for (grupo8.pessoas.Pessoa p : listaPessoas) {
+            String doc = "";
+            String nome = "";
+            
+            // Polimorfismo para pegar Nome e CPF/CNPJ
+            if (p instanceof grupo8.pessoas.PessoaFisica) {
+                grupo8.pessoas.PessoaFisica pf = (grupo8.pessoas.PessoaFisica) p;
+                nome = pf.getNome();
+                doc = pf.getCPF();
+            } else if (p instanceof grupo8.pessoas.PessoaJuridica) {
+                grupo8.pessoas.PessoaJuridica pj = (grupo8.pessoas.PessoaJuridica) p;
+                nome = pj.getNomeFantasia() + " (" + pj.getRazaoSocial() + ")";
+                doc = pj.getCnpj();
+            }
+
+            modelo.addRow(new Object[]{
+                // ID não tem na classe Pessoa abstrata, vamos usar o index ou precisa adicionar getId na abstrata
+                // Vou assumir que existe getId() ou usar hashCode provisoriamente
+                listaPessoas.indexOf(p) + 1, 
+                nome,
+                doc,
+                p.getEndereco(),
+                p.getTelefone1(),
+                p.getEmail()
+            });
+        }
     }
 
     /**
@@ -26,21 +65,152 @@ public class JFrameGestaoPessoas extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel1 = new javax.swing.JPanel();
+        ButtonNovo = new javax.swing.JButton();
+        ButtonEditar = new javax.swing.JButton();
+        ButtonExcluir = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        ButtonNovo.setText("Novo");
+        ButtonNovo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ButtonNovoActionPerformed(evt);
+            }
+        });
+
+        ButtonEditar.setText("Editar");
+        ButtonEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ButtonEditarActionPerformed(evt);
+            }
+        });
+
+        ButtonExcluir.setText("Excluir");
+        ButtonExcluir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ButtonExcluirActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(19, 19, 19)
+                .addComponent(ButtonNovo)
+                .addGap(18, 18, 18)
+                .addComponent(ButtonEditar)
+                .addGap(18, 18, 18)
+                .addComponent(ButtonExcluir)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(16, 16, 16)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ButtonNovo)
+                    .addComponent(ButtonEditar)
+                    .addComponent(ButtonExcluir))
+                .addContainerGap(21, Short.MAX_VALUE))
+        );
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "ID", "Nome", "CPF/CNPJ", "Endereço", "Telefone", "Email"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(jTable1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 880, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 484, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void ButtonExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonExcluirActionPerformed
+        // TODO add your handling code here:
+        int linha = jTable1.getSelectedRow();
+        if (linha == -1) return;
+        
+        int op = javax.swing.JOptionPane.showConfirmDialog(this, "Tem certeza?", "Excluir", javax.swing.JOptionPane.YES_NO_OPTION);
+        if (op == javax.swing.JOptionPane.YES_OPTION) {
+            listaPessoas.remove(linha);
+            gerenciador.salvarPessoas(listaPessoas);
+            atualizarTabela();
+        }
+    }//GEN-LAST:event_ButtonExcluirActionPerformed
+
+    private void ButtonNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonNovoActionPerformed
+        // TODO add your handling code here:
+        // Pergunta qual tipo
+        String[] opcoes = {"Pessoa Física", "Pessoa Jurídica"};
+        int escolha = javax.swing.JOptionPane.showOptionDialog(this, 
+                "Qual tipo de pessoa deseja cadastrar?", 
+                "Novo Cadastro", 
+                javax.swing.JOptionPane.DEFAULT_OPTION, 
+                javax.swing.JOptionPane.QUESTION_MESSAGE, 
+                null, opcoes, opcoes[0]);
+
+        if (escolha == -1) return; // Fechou a janela
+
+        // Define o tipo: 0 = PF, 1 = PJ
+        String tipo = (escolha == 0) ? "PF" : "PJ";
+
+        // Abre a tela passando o tipo
+        JDialogCadastroPessoas dialog = new JDialogCadastroPessoas(this, true, tipo, null);
+        dialog.setLocationRelativeTo(null);
+        dialog.setVisible(true);
+        
+        atualizarTabela(); // Atualiza ao voltar
+    }//GEN-LAST:event_ButtonNovoActionPerformed
+
+    private void ButtonEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonEditarActionPerformed
+        // TODO add your handling code here:
+        int linha = jTable1.getSelectedRow();
+        if (linha == -1) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Selecione para editar.");
+            return;
+        }
+        
+        grupo8.pessoas.Pessoa p = listaPessoas.get(linha);
+        String tipo = (p instanceof grupo8.pessoas.PessoaFisica) ? "PF" : "PJ";
+        
+        JDialogCadastroPessoas dialog = new JDialogCadastroPessoas(this, true, tipo, p);
+        dialog.setLocationRelativeTo(this);
+        dialog.setVisible(true);
+        
+        // Salva a lista editada
+        gerenciador.salvarPessoas(listaPessoas);
+        atualizarTabela();
+    }//GEN-LAST:event_ButtonEditarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -78,5 +248,11 @@ public class JFrameGestaoPessoas extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton ButtonEditar;
+    private javax.swing.JButton ButtonExcluir;
+    private javax.swing.JButton ButtonNovo;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
 }

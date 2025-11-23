@@ -6,7 +6,7 @@ import java.io.Serializable;
 public class ItemVenda implements Serializable {
     private Produto produto;
     private int quantidade;
-    private double precoUnitario; // Guardamos o preço do momento da venda!
+    private double precoUnitario; 
     private double subtotal;
 
     public ItemVenda(Produto produto, int quantidade) {
@@ -16,7 +16,7 @@ public class ItemVenda implements Serializable {
         this.subtotal = this.quantidade * this.precoUnitario;
     }
 
-    // Getters importantes para a tabela
+    // Getters usados na JFrameTelaVenda
     public Produto getProduto() { return produto; }
     public int getQuantidade() { return quantidade; }
     public double getPrecoUnitario() { return precoUnitario; }
@@ -24,6 +24,7 @@ public class ItemVenda implements Serializable {
     
     @Override
     public String toString() {
+        // Verifica se o produto tem getDescricao (como na classe nova) ou getNome
         return produto.getDescricao() + " x" + quantidade;
     }
 }

@@ -33,7 +33,6 @@ public final class Funcionario implements Serializable {
     private LocalDate dtDemissao; //não obrigatório
     private String tipoContrato; //CLT ou PJ
     private double salario;
-    private String emailCorporativo;
     
     public Funcionario(Pessoa dadosPessoa, String pis, String cargo, String dtAdmissao, String tipoContrato, String salario) {
         setDadosPessoa(dadosPessoa);
@@ -66,7 +65,7 @@ public final class Funcionario implements Serializable {
     }
     
     public void setPis(String pis) {
-        validaPis(pis);
+        validarPis(pis);
         this.pis = pis;
     }
     
@@ -106,48 +105,51 @@ public final class Funcionario implements Serializable {
         return dtAdmissao;
     }
     
-    public void setDtAdmissao(String data) {
-        if (data == null || data.trim().isEmpty()) {
+    public void setDtAdmissao(String dtAdmissao) {
+        if (dtAdmissao == null || dtAdmissao.trim().isEmpty()) {
             throw new IllegalArgumentException("A data de admissão não pode ser vazia.");
         }
         
         LocalDate hoje = LocalDate.now();
-        LocalDate temp;
+        LocalDate dtConvertida;
+        
         try {
-            temp = LocalDate.parse(data, formato);
+            dtConvertida = LocalDate.parse(dtAdmissao, formato);
         } catch(Exception e) {
-            throw new IllegalArgumentException("Data inválida. Use o formato DD/MM/AAAA.");
+            throw new IllegalArgumentException("Data de admissão inválida. Use o formato DD/MM/AAAA.");
         }
         
-        if(temp.isAfter(hoje)) {
+        if(dtConvertida.isAfter(hoje)) {
             throw new IllegalArgumentException("A data de admissão não pode ser anterior à data atual.");
         }
         
-        dtAdmissao = temp;
+        this.dtAdmissao = dtConvertida;
     }
     
     public LocalDate getDtDemissao() {
         return dtDemissao;
     }
 
-    public void setDtDemissao(String data) {
-        if (data == null || data.trim().isEmpty()) {
+    public void setDtDemissao(String dtDemissao) {
+        if (dtDemissao == null || dtDemissao.trim().isEmpty()) {
             this.dtDemissao = null;
             return;
         }
         
-        LocalDate temp;
+        LocalDate dtConvertida;
         try {
-            temp = LocalDate.parse(data, formato);
+            dtConvertida = LocalDate.parse(dtDemissao, formato);
         } catch(Exception e) {
-            throw new IllegalArgumentException("Data inválida. Use o formato DD/MM/AAAA.");
+            throw new IllegalArgumentException("Data de demissão inválida. Use o formato DD/MM/AAAA.\n"
+                    + "\nATENÇÃO: só preencha esse campo se houver uma data de demissão.");
         }
         
-        if(temp.isBefore(dtAdmissao)) {
-            throw new IllegalArgumentException("A data de demissão não pode ser inferior à de admissão.");
+        if(dtConvertida.isBefore(dtAdmissao)) {
+            throw new IllegalArgumentException("A data de demissão não pode ser inferior à de admissão."
+                    + "\nATENÇÃO: só preencha esse campo se houver uma data de demissão.");
         }
         
-        dtDemissao = temp;
+        this.dtDemissao = dtConvertida;
     }
 
     public String getTempoServico() {
@@ -193,46 +195,22 @@ public final class Funcionario implements Serializable {
             throw new IllegalArgumentException("Nenhum valor numérico encontrado");
         }
         
-        while(salario.contains(",") && salario.length() - salario.indexOf(",") > 3) {
-            int limite = salario.indexOf(",") + 1;
-            String salario1 = salario.substring(0, limite);
-            String salario2 = salario.substring(limite);
-            salario1 = salario1.replace(",", "");
-            salario = salario1 + salario2;
-        }
-        
-        while(salario.contains(".") && salario.length() - salario.indexOf(".") > 3) {
-            int limite = salario.indexOf(".") + 1;
-            String salario1 = salario.substring(0, limite);
-            String salario2 = salario.substring(limite);
-            salario1 = salario1.replace(".", "");
-            salario = salario1 + salario2;
-        }
-        
-        salario = salario.replace(",", ".");
-        
+        double salarioFormatado;
         try {
-            double salarioFormatado = Double.parseDouble(salario);
-            
-            if(salarioFormatado <= 0) {
-                throw new IllegalArgumentException("Por favor, digite um salário maior que 0.");
-            } else {
-                this.salario = salarioFormatado;
-            }
+            salarioFormatado = Double.parseDouble(salario);
         } catch(Exception e) {
-            throw new IllegalArgumentException("Por favor, digite somente os números do salário, usando ponto como separador decimal.");
+            throw new IllegalArgumentException("Por favor, digite o salário usando ponto como separador decimal, sem separar os milhares.\n"
+                    + "\nExemplo: 2100");
         }
+        
+        if(salarioFormatado <= 0) {
+                throw new IllegalArgumentException("Por favor, digite um salário maior que 0.");
+        }
+        
+        this.salario = salarioFormatado;
     }
 
-    public String getEmailCorporativo() {
-        return emailCorporativo;
-    }
-
-    public void setEmailCorporativo(String emailCorporativo) {
-        this.emailCorporativo = emailCorporativo;
-    }
-    
-    public void validaPis(String pis) {
+    public void validarPis(String pis) {
         if(pis == null || pis.trim().isEmpty()) {
             throw new IllegalArgumentException("Por favor, digite o PIS do funcionário.");
         } 

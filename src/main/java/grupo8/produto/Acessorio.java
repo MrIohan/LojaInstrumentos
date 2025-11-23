@@ -13,6 +13,7 @@ public final class Acessorio extends Produto {
         
         super(codigo, descricao, marca, dataFabricacao, paisFabricacao, 
               material, cor, preco, peso, qntEstoque, prazoGarantia);
+        
         setTipo(tipo);
         setIndicacao(indicacao);
         idAcessorio++;
@@ -49,7 +50,7 @@ public final class Acessorio extends Produto {
             throw new IllegalArgumentException("Por favor, digite os intrumentos indicados para este acessório.\n");
         }
 
-        tipo = tipo.trim();
+        indicacao = indicacao.trim();
 
         if (!indicacao.matches("[\\p{L} ]+")){
             throw new IllegalArgumentException("Indicação inválida. Por favor, digite somente letras.\n");

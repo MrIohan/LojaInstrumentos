@@ -5,78 +5,84 @@
 package grupo8.view;
 
 import grupo8.persistencia.GerenciadorDados;
-import grupo8.produto.Produto;
+import grupo8.pessoas.Pessoa;
+import grupo8.pessoas.PessoaFisica;
+import grupo8.pessoas.PessoaJuridica;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableModel;import grupo8.produto.Produto;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author carpi
  */
-public class JDialogBuscaProduto extends javax.swing.JDialog {
+public class JDialogBuscaPessoa extends javax.swing.JDialog {
 
     /**
-     * Creates new form JDialogBuscaProduto
+     * Creates new form JDialogBuscaPessoa
      */
     
-    private Produto produtoSelecionado = null;
-    private ArrayList<Produto> listaProdutos;
+    private Pessoa pessoaSelecionada = null;
+    private ArrayList<Pessoa> listaPessoas;
     
-    public JDialogBuscaProduto(java.awt.Frame parent, boolean modal) {
+    
+    public JDialogBuscaPessoa(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         carregarDados();
         this.setLocationRelativeTo(parent);
     }
     
-    public Produto getProdutoSelecionado() {
-        return produtoSelecionado;
+    public Pessoa getPessoaSelecionada() {
+        return pessoaSelecionada;
     }
 
     private void carregarDados() {
+            GerenciadorDados g = new GerenciadorDados();
+            listaPessoas = g.carregarPessoas(); // Carrega a lista do arquivo
 
-        GerenciadorDados g = new GerenciadorDados();
-        listaProdutos = g.carregarLista();
-        DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
-        modelo.setRowCount(0);
+            javax.swing.table.DefaultTableModel modelo = (javax.swing.table.DefaultTableModel) jTable1.getModel();
+            modelo.setRowCount(0); // Limpa a tabela
 
-        java.time.format.DateTimeFormatter fmt = java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            for (grupo8.pessoas.Pessoa p : listaPessoas) {
+                String nome = "";
+                String documento = "";
+                String tipo = "";
 
-        for (Produto p : listaProdutos) {
-            // Tratamento para Fabricante (Polimorfismo manual)
-            String fabricante = "";
-            if (p instanceof grupo8.produto.Instrumento) {
-                fabricante = ((grupo8.produto.Instrumento) p).getFabricante();
-            } else if (p instanceof grupo8.produto.Acessorio) {
-                // fabricante = ((grupo8.produto.Acessorio) p).getFabricante(); // Se acessorio tiver
+                // Verifica o tipo e extrai os dados específicos
+                if (p instanceof grupo8.pessoas.PessoaFisica) {
+                    grupo8.pessoas.PessoaFisica pf = (grupo8.pessoas.PessoaFisica) p;
+                    nome = pf.getNome();
+                    documento = pf.getCPF();
+                    tipo = "Física";
+                } else if (p instanceof grupo8.pessoas.PessoaJuridica) {
+                    grupo8.pessoas.PessoaJuridica pj = (grupo8.pessoas.PessoaJuridica) p;
+                    nome = pj.getNomeFantasia(); // Ou pj.getRazaoSocial() se preferir
+                    documento = pj.getCnpj();
+                    tipo = "Jurídica";
+                }
+
+                // Adiciona a linha com as 7 colunas na ordem exata do cabeçalho
+                modelo.addRow(new Object[]{
+                    listaPessoas.indexOf(p) + 1, // 1. ID (Usando índice + 1)
+                    nome,                        // 2. Nome
+                    documento,                   // 3. CPF ou CNPJ
+                    p.getEndereco(),             // 4. Endereço (Comum a todos)
+                    p.getTelefone1(),            // 5. Telefone (Comum a todos)
+                    p.getEmail(),                // 6. Email (Comum a todos)
+                    tipo                         // 7. Tipo Pessoa
+                });
             }
-
-            modelo.addRow(new Object[]{
-                p.getIdProduto(),
-                p.getCodigo(),
-                p.getDescricao(),
-                fabricante, 
-                p.getDataFabricacao().format(fmt),
-                p.getPaisFabricacao(),
-                p.getMaterial(),
-                p.getCor(),
-                String.format("R$ %.2f", p.getPreco()),
-                p.getPeso(),
-                p.getQntEstoque()
-            });
         }
-    }
 
-    // Chame este método no botão "Selecionar" ou no duplo clique da tabela
+    // Evento do botão Selecionar e Duplo Clique
     private void confirmarSelecao() {
         int linha = jTable1.getSelectedRow();
         if (linha != -1) {
-            // Pega o objeto real da lista usando o índice da tabela
-            this.produtoSelecionado = listaProdutos.get(linha);
-            this.dispose(); // Fecha a janela
+            this.pessoaSelecionada = listaPessoas.get(linha);
+            this.dispose();
         } else {
-            JOptionPane.showMessageDialog(this, "Selecione um produto!");
+            JOptionPane.showMessageDialog(this, "Selecione uma pessoa!");
         }
     }
 
@@ -90,16 +96,16 @@ public class JDialogBuscaProduto extends javax.swing.JDialog {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
+        ButtonSelecionar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        jButton1.setText("SELECIONAR");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        ButtonSelecionar.setText("SELECIONAR");
+        ButtonSelecionar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                ButtonSelecionarActionPerformed(evt);
             }
         });
 
@@ -109,28 +115,36 @@ public class JDialogBuscaProduto extends javax.swing.JDialog {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jButton1)
+                .addComponent(ButtonSelecionar)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(21, Short.MAX_VALUE)
-                .addComponent(jButton1)
+                .addComponent(ButtonSelecionar)
                 .addContainerGap())
         );
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null}
             },
             new String [] {
-                "ID", "Código", "Descrição", "Fabricante", "Data Fabricação", "País Fabricação", "Material", "Cor", "Preço", "Peso", "Estoque"
+                "ID", "Nome", "CPF/CNPJ", "Endereço", "Telefone", "Email", "Tipo Pessoa"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -138,7 +152,7 @@ public class JDialogBuscaProduto extends javax.swing.JDialog {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 890, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 860, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -151,17 +165,15 @@ public class JDialogBuscaProduto extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void ButtonSelecionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonSelecionarActionPerformed
         // TODO add your handling code here:
         confirmarSelecao();
-    }//GEN-LAST:event_jButton1ActionPerformed
-    
+    }//GEN-LAST:event_ButtonSelecionarActionPerformed
+                                               
+
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {                                     
-        if (evt.getClickCount() == 2) {
-            confirmarSelecao();
-        }
+        if (evt.getClickCount() == 2) confirmarSelecao();
     }
-    
     /**
      * @param args the command line arguments
      */
@@ -179,20 +191,20 @@ public class JDialogBuscaProduto extends javax.swing.JDialog {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(JDialogBuscaProduto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(JDialogBuscaPessoa.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(JDialogBuscaProduto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(JDialogBuscaPessoa.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(JDialogBuscaProduto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(JDialogBuscaPessoa.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(JDialogBuscaProduto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(JDialogBuscaPessoa.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                JDialogBuscaProduto dialog = new JDialogBuscaProduto(new javax.swing.JFrame(), true);
+                JDialogBuscaPessoa dialog = new JDialogBuscaPessoa(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -205,10 +217,9 @@ public class JDialogBuscaProduto extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton ButtonSelecionar;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
-
 }

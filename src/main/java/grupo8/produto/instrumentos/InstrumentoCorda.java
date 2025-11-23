@@ -1,190 +1,243 @@
-///*
-// * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
-// * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
-// */
-//package grupo8.produto.instrumentos;
-//
-//import grupo8.produto.Instrumento;
-//
-//public final class InstrumentoCorda extends Instrumento {
-//    
-//    private final int id;
-//    private String tipo;
-//    private int numCorda;
-//    private String encordoamento;
-//    private String captadores;
-//    private int numTrastes;
-//    private String materialBraco;
-//    private String encaixeBraco;
-//    private String formatoCorpo;
-//    private String corEscudo;
-//    
-//    public InstrumentoCorda(String tipo, int numCorda, String encordoamento, String captadores,
-//                           int numTrastes, String materialBraco, String encaixeBraco, 
-//                           String formatoCorpo, String corEscudo,
-//                           String numSerie, String tipoSaida, String nivelProfissional,
-//                           String codigo, String descricao, String fabricante, String marca, 
-//                           String dataFabricacao, String paisFabricacao, String material, 
-//                           String cor, double preco, double peso, int qntEstoque, int prazoGarantia) {
-//        
-//        super(numSerie, tipoSaida, nivelProfissional, codigo, descricao, fabricante, marca,
-//              dataFabricacao, paisFabricacao, material, cor, preco, peso, qntEstoque, prazoGarantia);
-//        this.id = getID(); // Usa o ID herdado do Instrumento
-//        
-//        setTipo(tipo);
-//        setNumCorda(numCorda);
-//        setEncordoamento(encordoamento);
-//        setCaptadores(captadores);
-//        setNumTrastes(numTrastes);
-//        setMaterialBraco(materialBraco);
-//        setEncaixeBraco(encaixeBraco);
-//        setFormatoCorpo(formatoCorpo);
-//        setCorEscudo(corEscudo);
-//    }
-//    
-//    public String getTipo() {
-//        return tipo;
-//    }
-//    
-//    public final void setTipo(String tipo) {
-//        tipo = (tipo == null ? "" : tipo.trim());
-//        if(tipo.isEmpty()) {
-//            throw new IllegalArgumentException("Tipo do instrumento de corda é obrigatório.\n");
-//        } else {
-//            this.tipo = tipo;
-//        }
-//    }
-//    
-//    public int getNumCorda() {
-//        return numCorda;
-//    }
-//    
-//    public final void setNumCorda(int numCorda) {
-//        if(numCorda <= 0) {
-//            throw new IllegalArgumentException("Número de cordas deve ser positivo.\n");
-//        } else {
-//            this.numCorda = numCorda;
-//        }
-//    }
-//    
-//    public String getEncordoamento() {
-//        return encordoamento;
-//    }
-//    
-//    public final void setEncordoamento(String encordoamento) {
-//        encordoamento = (encordoamento == null ? "" : encordoamento.trim());
-//        if(encordoamento.isEmpty()) {
-//            throw new IllegalArgumentException("Tipo de encordoamento é obrigatório.\n");
-//        } else {
-//            this.encordoamento = encordoamento;
-//        }
-//    }
-//    
-//    public String getCaptadores() {
-//        return captadores;
-//    }
-//    
-//    public final void setCaptadores(String captadores) {
-//        captadores = (captadores == null ? "" : captadores.trim());
-//        this.captadores = captadores; // Pode ser vazio para instrumentos acústicos
-//    }
-//    
-//    public int getNumTrastes() {
-//        return numTrastes;
-//    }
-//    
-//    public final void setNumTrastes(int numTrastes) {
-//        if(numTrastes < 0) {
-//            throw new IllegalArgumentException("Número de trastes não pode ser negativo.\n");
-//        } else {
-//            this.numTrastes = numTrastes;
-//        }
-//    }
-//    
-//    public String getMaterialBraco() {
-//        return materialBraco;
-//    }
-//    
-//    public final void setMaterialBraco(String materialBraco) {
-//        materialBraco = (materialBraco == null ? "" : materialBraco.trim());
-//        if(materialBraco.isEmpty()) {
-//            throw new IllegalArgumentException("Material do braço é obrigatório.\n");
-//        } else {
-//            this.materialBraco = materialBraco;
-//        }
-//    }
-//    
-//    public String getEncaixeBraco() {
-//        return encaixeBraco;
-//    }
-//    
-//    public final void setEncaixeBraco(String encaixeBraco) {
-//        encaixeBraco = (encaixeBraco == null ? "" : encaixeBraco.trim());
-//        if(encaixeBraco.isEmpty()) {
-//            throw new IllegalArgumentException("Tipo de encaixe do braço é obrigatório.\n");
-//        } else {
-//            this.encaixeBraco = encaixeBraco;
-//        }
-//    }
-//    
-//    public String getFormatoCorpo() {
-//        return formatoCorpo;
-//    }
-//    
-//    public final void setFormatoCorpo(String formatoCorpo) {
-//        formatoCorpo = (formatoCorpo == null ? "" : formatoCorpo.trim());
-//        if(formatoCorpo.isEmpty()) {
-//            throw new IllegalArgumentException("Formato do corpo é obrigatório.\n");
-//        } else {
-//            this.formatoCorpo = formatoCorpo;
-//        }
-//    }
-//    
-//    public String getCorEscudo() {
-//        return corEscudo;
-//    }
-//    
-//    public final void setCorEscudo(String corEscudo) {
-//        corEscudo = (corEscudo == null ? "" : corEscudo.trim());
-//        this.corEscudo = corEscudo; // Opcional
-//    }
-//    
-//    @Override
-//    public String toString() {
-//        return 
-//            "\nInstrumento de Corda [ID: " + id + "]" +
-//            "\nTipo: " + tipo +
-//            "\nNúmero de Cordas: " + numCorda +
-//            "\nEncordoamento: " + encordoamento +
-//            "\nCaptadores: " + (captadores.isEmpty() ? "N/A" : captadores) +
-//            "\nNúmero de Trastes: " + numTrastes +
-//            "\nMaterial do Braço: " + materialBraco +
-//            "\nEncaixe do Braço: " + encaixeBraco +
-//            "\nFormato do Corpo: " + formatoCorpo +
-//            "\nCor do Escudo: " + (corEscudo.isEmpty() ? "N/A" : corEscudo) +
-//            "\nNúmero de Série: " + getNumSerie() +
-//            "\nTipo de Saída: " + getTipoSaida() +
-//            "\nNível Profissional: " + getNivelProfissional() +
-//            "\nCódigo: " + getCodigo() +
-//            "\nDescrição: " + getDescricao() +
-//            "\nFabricante: " + getFabricante() +
-//            "\nMarca: " + getMarca() +
-//            "\nData Fabricação: " + getDataFabricacao() +
-//            "\nPaís Fabricação: " + getPaisFabricacao() +
-//            "\nMaterial: " + getMaterial() +
-//            "\nCor: " + getCor() +
-//            "\nPreço: R$ " + String.format("%.2f", getPreco()) +
-//            "\nPeso: " + getPeso() + " kg" +
-//            "\nEstoque: " + getQntEstoque() +
-//            "\nGarantia: " + getPrazoGarantia() + " meses" +
-//            "\n\n---------------------------------------------------------------";
-//    }
-//    
-//    @Override
-//    public void salvar() throws java.io.FileNotFoundException, java.io.IOException {
-//        try (java.io.FileOutputStream fileOut = new java.io.FileOutputStream("src/data/Produto"+ id +"_COR.ser");
-//             java.io.ObjectOutputStream out = new java.io.ObjectOutputStream(fileOut)) {
-//             out.writeObject(this);
-//        }
-//    }
-//}
+package grupo8.produto.instrumentos;
+
+import grupo8.produto.Instrumento;
+
+public final class InstrumentoCorda extends Instrumento {
+    
+    private String tipo;
+    private int numCorda;
+    private String encordoamento;
+    private String captadores;
+    private int numTrastes;
+    private String materialBraco;
+    private String encaixeBraco;
+    private String formatoCorpo;
+    private String corEscudo;
+    
+    public InstrumentoCorda(String tipo, String numCorda, String encordoamento, String captadores, String numTrastes, 
+                            String materialBraco, String encaixeBraco, String formatoCorpo, String corEscudo,
+                            String fabricante, String numSerie, String tipoProducaoSom, String nivelProfissional,
+                            String codigo, String descricao, String marca, String dataFabricacao, String paisFabricacao, 
+                            String material, String cor, String preco, String peso, String estoque, String prazoGarantia){
+    
+        super(fabricante, numSerie, tipoProducaoSom, nivelProfissional, 
+                codigo, descricao, marca, dataFabricacao, paisFabricacao, 
+                material, cor, preco, peso, estoque, prazoGarantia);
+            
+        setTipo(tipo);
+        setNumCorda(numCorda);
+        setEncordoamento(encordoamento);
+        setCaptadores(captadores);
+        setNumTrastes(numTrastes);
+        setMaterialBraco(materialBraco);
+        setEncaixeBraco(encaixeBraco);
+        setFormatoCorpo(formatoCorpo);
+        setCorEscudo(corEscudo);
+    }
+    
+    public String getTipo() {
+        return tipo;
+    }
+    
+    public void setTipo(String tipo) {
+        if (tipo == null || tipo.trim().isEmpty()) {
+            throw new IllegalArgumentException("Por favor, digite o tipo do instrumento. Ex: Violão, Guitarra, Baixo.\n");
+        }
+
+        tipo = tipo.trim();
+
+        if (!tipo.matches("[\\p{L} ]+")){
+            throw new IllegalArgumentException("Tipo inválido. Por favor, digite somente letras.\n");
+        } 
+        
+        this.tipo = tipo;
+    }
+    
+    public int getNumCorda() {
+        return numCorda;
+    }
+    
+    public final void setNumCorda(String numCorda) {
+          if(numCorda == null || numCorda.trim().isEmpty()) {
+            throw new IllegalArgumentException("Por favor, digite o número de cordas.\n");
+        }
+        
+        int numCordaFormatado;
+        
+        try {
+            numCordaFormatado = Integer.parseInt(numCorda);
+            
+        } catch(Exception e) {
+            throw new IllegalArgumentException("Por favor, digite somente números para o número de cordas.\n");
+        }
+        
+        if(numCordaFormatado <= 0) {
+            throw new IllegalArgumentException("Por favor, digite um número de cordas maior que 0.\n");
+        }
+        
+        this.numCorda = numCordaFormatado;
+    }
+    
+    public String getEncordoamento() {
+        return encordoamento;
+    }
+    
+    public final void setEncordoamento(String encordoamento) {
+        if (encordoamento == null || encordoamento.trim().isEmpty()) {
+            throw new IllegalArgumentException("Por favor, digite o tipo de encordoamento.\n");
+        }
+
+        encordoamento = encordoamento.trim();
+
+        if (!encordoamento.matches("[\\p{L} ]+")){
+            throw new IllegalArgumentException("Encordoamento inválido. Por favor, digite somente letras.\n");
+        } 
+        
+        this.encordoamento = encordoamento;
+    }
+    
+    public String getCaptadores() {
+        return captadores;
+    }
+    
+    public final void setCaptadores(String captadores) {
+        if(captadores == null || captadores.trim().isEmpty()) {
+            throw new IllegalArgumentException("Por favor, digite os captadores.\n");
+    }
+    
+    captadores = captadores.trim();
+    
+        if (!captadores.matches("[\\p{L}0-9 ]+")){
+            throw new IllegalArgumentException("Captadores inválidos. Por favor, digite somente letras e números.\n");
+    }
+    
+        this.captadores = captadores;
+    }
+    
+    public int getNumTrastes() {
+        return numTrastes;
+    }
+    
+    public final void setNumTrastes(String numTrastes) {
+        if(numTrastes == null || numTrastes.trim().isEmpty()) {
+            throw new IllegalArgumentException("Por favor, digite o número de trastes.\n");
+        }
+        
+        int numTrastesFormatado;
+        
+        try {
+            numTrastesFormatado = Integer.parseInt(numTrastes);
+            
+        } catch(Exception e) {
+            throw new IllegalArgumentException("Por favor, digite somente números para o número de trastes.\n");
+        }
+        
+        if(numTrastesFormatado < 0) {
+            throw new IllegalArgumentException("Por favor, digite um número de trastes maior ou igual a 0.\n");
+        }
+        
+        this.numTrastes = numTrastesFormatado;
+    }
+    
+    public String getMaterialBraco() {
+        return materialBraco;
+    }
+    
+    public final void setMaterialBraco(String materialBraco) {
+        if (materialBraco == null || materialBraco.trim().isEmpty()) {
+            throw new IllegalArgumentException("Por favor, digite o material do braço.\n");
+        }
+
+        materialBraco = materialBraco.trim();
+
+        if (!materialBraco.matches("[\\p{L} ]+")){
+            throw new IllegalArgumentException("Material do braço inválido. Por favor, digite somente letras.\n");
+        } 
+        
+        this.materialBraco = materialBraco;
+    }
+    
+    public String getEncaixeBraco() {
+        return encaixeBraco;
+    }
+    
+    public final void setEncaixeBraco(String encaixeBraco) {
+        if (encaixeBraco == null || encaixeBraco.trim().isEmpty()) {
+            throw new IllegalArgumentException("Por favor, digite o tipo de encaixe do braço.\n");
+        }
+
+        encaixeBraco = encaixeBraco.trim();
+
+        if (!encaixeBraco.matches("[\\p{L} ]+")){
+            throw new IllegalArgumentException("Encaixe do braço inválido. Por favor, digite somente letras.\n");
+        } 
+        
+        this.encaixeBraco = encaixeBraco;
+    }
+    
+    public String getFormatoCorpo() {
+        return formatoCorpo;
+    }
+    
+    public final void setFormatoCorpo(String formatoCorpo) {
+        if (formatoCorpo == null || formatoCorpo.trim().isEmpty()) {
+            throw new IllegalArgumentException("Por favor, digite o formato do corpo.\n");
+        }
+
+        formatoCorpo = formatoCorpo.trim();
+
+        if (!formatoCorpo.matches("[\\p{L} ]+")){
+            throw new IllegalArgumentException("Formato do corpo inválido. Por favor, digite somente letras.\n");
+        } 
+        
+        this.formatoCorpo = formatoCorpo;
+    }
+    
+    public String getCorEscudo() {
+        return corEscudo;
+    }
+    
+    public final void setCorEscudo(String corEscudo) {
+        if(corEscudo == null || corEscudo.trim().isEmpty()) {
+            throw new IllegalArgumentException("Por favor, digite a cor do escudo.\n");
+    }
+    
+        corEscudo = corEscudo.trim();
+    
+        if (!corEscudo.matches("[\\p{L}0-9 ]+")){
+            throw new IllegalArgumentException("Cor do escudo inválida. Por favor, digite somente letras e números.\n");
+    }
+    
+        this.corEscudo = corEscudo;
+    }
+    
+    @Override
+    public String toString() {
+        return 
+            "\nINSTRUMENTO DE CORDA [ID: " + idProduto + "]" +
+            "\n    Tipo: " + tipo +
+            "\n    Número de Cordas: " + numCorda +
+            "\n    Encordoamento: " + encordoamento +
+            "\n    Captadores: " + captadores +
+            "\n    Número de Trastes: " + numTrastes +
+            "\n    Material do Braço: " + materialBraco +
+            "\n    Encaixe do Braço: " + encaixeBraco +
+            "\n    Formato do Corpo: " + formatoCorpo +
+            "\n    Cor do Escudo: " + corEscudo +
+            super.toString() + "\n";
+    }
+    
+    
+   public void salvar() throws java.io.FileNotFoundException, java.io.IOException {
+        try (java.io.FileOutputStream fileOut = new java.io.FileOutputStream("src/data/Produto"+ getIdProduto() +"_COR.ser");
+             java.io.ObjectOutputStream out = new java.io.ObjectOutputStream(fileOut)) {
+             out.writeObject(this);
+        }
+    }
+   
+    @Override
+    public void afinar() {
+        System.out.println("Afinando as cordas...");
+    }
+   
+}
